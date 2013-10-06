@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.abid_mujtaba.fetchheaders_android"
+          package="com.abid_mujtaba.fetchheaders"
           android:versionCode="1"
           android:versionName="1.0">
+
     <uses-sdk android:minSdkVersion="10"/>
+
     <application android:label="@string/app_name">
+
         <activity android:name="MainActivity"
                   android:label="@string/app_name">
             <intent-filter>
@@ -12,5 +15,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".AccountsActivity"
+            android:label="AccountsActivity">
+            <intent-filter>
+                <action android:name="com.abid_mujtaba.fetchheaders.AccountsActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
     </application>
 </manifest> 

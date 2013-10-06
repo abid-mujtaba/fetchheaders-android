@@ -1,11 +1,11 @@
-package com.abid_mujtaba.fetchheaders_android;
+package com.abid_mujtaba.fetchheaders;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
     /**
@@ -36,7 +36,9 @@ public class MainActivity extends Activity {
         {
             case R.id.menu_accounts:
 
-                Toast.makeText(this, "Accounts!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountsActivity"));
+                finish();
+
                 return true;
 
             default:
