@@ -65,6 +65,17 @@ public class Account
     }
 
 
+    public void update(String _name, String _host, String _username, String _password)      // Used to update account information
+    {
+        mName = _name;
+        mHost = _host;
+        mUsername = _username;
+        mPassword = _password;
+
+        writeAccountsToJson();
+    }
+
+
     public static void createAccountsFromJson()     // Reads the specified json file and uses it to construct Account objects
     {
         try
@@ -91,6 +102,39 @@ public class Account
         catch (FileNotFoundException e) { Log.e(Resources.LOGTAG, "Unable to open " + Settings.ACCOUNTS_JSON_FILE, e); }
         catch (IOException e) { Log.e(Resources.LOGTAG, "Unable to close FileInputStream for " + Settings.ACCOUNTS_JSON_FILE, e); }
         catch (JSONException e) { Log.e(Resources.LOGTAG, "Exception thrown while working with JSON", e); }
+    }
+
+
+    private static void writeAccountsToJson()       // Reads all Account objects (some of them updated) and uses them to write this data to accounts.json
+    {
+        try
+        {
+            JSONObject jRoot = new JSONObject();
+            JSONArray jAccounts = new JSONArray();
+
+            for (int ii = 0; ii < sNumOfInstances; ii++)
+            {
+                JSONObject jAccount = new JSONObject();
+                Account account = sInstances.get(ii);
+
+                jAccount.put("name", account.name());
+                jAccount.put("host", account.host());
+                jAccount.put("username", account.username());
+                jAccount.put("password", account.password());
+
+                jAccounts.put(jAccount);
+            }
+
+            jRoot.put("accounts", jAccounts);
+
+            // Save JSON to accounts.json
+            FileWriter fw = new FileWriter(new File(Resources.INTERNAL_FOLDER, Settings.ACCOUNTS_JSON_FILE));    // Write root JSON object to file info.json
+            fw.write(jRoot.toString());
+            fw.flush();
+            fw.close();
+        }
+        catch (JSONException e) { Log.e(Resources.LOGTAG, "Exception raised while manipulate JSON objects.", e); }
+        catch (IOException e) { Log.e(Resources.LOGTAG, "Exception raised while saving content to json file.", e); }
     }
 
 

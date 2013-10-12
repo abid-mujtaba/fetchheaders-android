@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.abid_mujtaba.fetchheaders.R;
 import com.abid_mujtaba.fetchheaders.models.Account;
@@ -20,6 +19,8 @@ import com.abid_mujtaba.fetchheaders.models.Account;
 public class AccountSettingsFragment extends Fragment
 {
     private EditText edtName, edtHost, edtUsername, edtPassword;
+
+    private Account mAccount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -34,12 +35,12 @@ public class AccountSettingsFragment extends Fragment
         initiateButtons(v);
 
         // We read the account information from accounts.json and use it to populate the EditText fields
-        Account account = Account.get(0);
+        mAccount = Account.get(0);
 
-        edtName.setText(account.name());
-        edtHost.setText(account.host());
-        edtUsername.setText(account.username());
-        edtPassword.setText(account.password());
+        edtName.setText(mAccount.name());
+        edtHost.setText(mAccount.host());
+        edtUsername.setText(mAccount.username());
+        edtPassword.setText(mAccount.password());
 
         return v;
     }
@@ -66,9 +67,21 @@ public class AccountSettingsFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                Toast.makeText(getActivity(), "Save pressed.", Toast.LENGTH_SHORT).show();
+                // Extract information from UI
+
+                String name = edtName.getText().toString();
+                String host = edtHost.getText().toString();
+                String username = edtUsername.getText().toString();
+                String password = edtPassword.getText().toString();
+
+                // Update correspondong Account object which in turn updates the accounts.json file
+                mAccount.update(name, host, username, password);
+
+                // Return to MainActivity
+                startActivity(new Intent("com.abid_mujtaba.fetchheaders.MainActivity"));
+
+                getActivity().finish();
             }
         });
     }
-
 }
