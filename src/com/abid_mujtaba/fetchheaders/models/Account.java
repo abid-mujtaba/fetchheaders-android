@@ -9,10 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -56,7 +53,7 @@ public class Account
     public String username() { return mUsername; }
     public String password() { return mPassword; }
 
-    public Account get(int id)
+    public static Account get(int id)
     {
         return sInstances.get(id);
     }
@@ -72,7 +69,14 @@ public class Account
     {
         try
         {
-            FileInputStream fis = new FileInputStream(new File(Resources.INTERNAL_FOLDER, Settings.ACCOUNTS_JSON_FILE));
+            File file = new File(Resources.INTERNAL_FOLDER, Settings.ACCOUNTS_JSON_FILE);
+
+            if (!file.exists())
+            {
+                createEmptyAccountsJsonFile(file);
+            }
+
+            FileInputStream fis = new FileInputStream(file);
 
             String content = Resources.getStringFromInputStream(fis);
             fis.close();
@@ -87,5 +91,26 @@ public class Account
         catch (FileNotFoundException e) { Log.e(Resources.LOGTAG, "Unable to open " + Settings.ACCOUNTS_JSON_FILE, e); }
         catch (IOException e) { Log.e(Resources.LOGTAG, "Unable to close FileInputStream for " + Settings.ACCOUNTS_JSON_FILE, e); }
         catch (JSONException e) { Log.e(Resources.LOGTAG, "Exception thrown while working with JSON", e); }
+    }
+
+
+    private static void createEmptyAccountsJsonFile(File file)
+    {
+        try
+        {
+            // We start by creating the JSON tree for an empty accounts.json file.
+            JSONObject root = new JSONObject();
+            JSONArray accounts = new JSONArray();
+
+            root.put("accounts", accounts);
+
+            // Save JSON to accounts.json
+            FileWriter fw = new FileWriter(file);    // Write root JSON object to file info.json
+            fw.write(root.toString());
+            fw.flush();
+            fw.close();
+        }
+        catch (JSONException e) { Log.e(Resources.LOGTAG, "Exception raised while manipulate JSON objects.", e); }
+        catch (IOException e) { Log.e(Resources.LOGTAG, "Exception raised while saving content to json file.", e); }
     }
 }

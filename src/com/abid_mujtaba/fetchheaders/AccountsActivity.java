@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 import com.abid_mujtaba.fetchheaders.fragments.AccountSettingsFragment;
-import com.abid_mujtaba.fetchheaders.models.Account;
 
 
 /**
@@ -19,9 +18,6 @@ public class AccountsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.accounts);
-
-        // Set up Account objects based on the accounts.json file
-        Account.createAccountsFromJson();
 
         // Create and add AccountSettingsFragment to this activity.
         AccountSettingsFragment fragment = new AccountSettingsFragment();
