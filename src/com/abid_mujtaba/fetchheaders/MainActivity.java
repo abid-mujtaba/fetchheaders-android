@@ -31,12 +31,14 @@ public class MainActivity extends FragmentActivity
             TextView tvEmpty = (TextView) findViewById(R.id.txtNoAccounts);     // We start by removing the No Accounts view since accounts are present
             scrollList.removeView(tvEmpty);
 
-            AccountFragment aF1 = AccountFragment.newInstance("Hello");
-            AccountFragment aF2 = AccountFragment.newInstance("World");
-
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.scrollList, aF1);
-            ft.add(R.id.scrollList, aF2);
+
+            for (int ii = 0; ii < Account.numberOfAccounts(); ii++)
+            {
+                AccountFragment aF = AccountFragment.newInstance(ii);       // We create a new account fragment and specify the number of the Account associated with it
+                ft.add(R.id.scrollList, aF);
+            }
+
             ft.commit();
         }
     }
