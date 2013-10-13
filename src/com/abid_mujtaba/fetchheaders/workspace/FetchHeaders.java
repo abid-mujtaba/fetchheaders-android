@@ -2,7 +2,6 @@
 
 import com.sun.mail.imap.IMAPFolder;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.*;

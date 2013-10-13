@@ -52,4 +52,9 @@ public class Resources
     {
         Log.e(LOGTAG, message, e);
     }
+
+    public static void Logd(String message)
+    {
+        Log.d(LOGTAG, message);
+    }
 }

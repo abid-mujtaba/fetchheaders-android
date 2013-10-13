@@ -25,3 +25,6 @@ local.properties
 
 # Symbolic Links to jar files in workspace
 src/com/abid_mujtaba/fetchheaders/workspace/*.jar
+
+# Compiled 'out' folder
+out/

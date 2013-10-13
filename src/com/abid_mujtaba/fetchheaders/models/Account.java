@@ -76,6 +76,12 @@ public class Account
     }
 
 
+    public static int numberOfAccounts()
+    {
+        return sNumOfInstances;
+    }
+
+
     public static void createAccountsFromJson()     // Reads the specified json file and uses it to construct Account objects
     {
         try
