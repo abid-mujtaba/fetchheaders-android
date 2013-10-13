@@ -5,6 +5,7 @@ import com.sun.mail.imap.IMAPFolder;
 import java.util.Properties;
 
 import javax.mail.*;
+import javax.mail.internet.InternetAddress;
 
 
 /**
@@ -53,14 +54,15 @@ public class FetchHeaders
 
             inbox.fetch(messages, fp);
 
-            Message message = messages[0];
+            for (int ii = 0; ii < messages.length; ii++)
+            {
+                Message message = messages[ii];
 
-            print(message.getSentDate().toString());
-            print(message.getFrom()[0].toString());
-            print(message.getSubject());
-            print(message.isSet(Flags.Flag.SEEN) + "");
-
-            print("\n" + inbox.getUnreadMessageCount());
+                print(message.getSentDate().toString());
+                print(((InternetAddress) message.getFrom()[0]).getPersonal());
+                print(message.getSubject());
+                print(message.isSet(Flags.Flag.SEEN) + "\n");
+            }
         }
         catch (NoSuchProviderException e) {} // Resources.Loge("Unable to get store from imapsession", e); }
         catch (MessagingException e) {} // Resources.Loge("Exception while attempting to connect to mail server", e); }

@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.abid_mujtaba.fetchheaders.R;
-import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.models.Account;
 import com.abid_mujtaba.fetchheaders.models.Email;
+import com.abid_mujtaba.fetchheaders.views.EmailView;
 
 
 public class AccountFragment extends Fragment
@@ -44,7 +44,15 @@ public class AccountFragment extends Fragment
 
         Email[] emails = mAccount.fetchEmails();
 
-        for (int ii = 0; ii < emails.length; ii++) {Resources.Logd(emails[ii].toString());}
+        for (int ii = 0; ii < emails.length; ii++)
+        {
+            Email email = emails[ii];
+
+            EmailView ev = new EmailView(this.getActivity(), null);
+            ev.setInfo(email.date(), email.from(), email.subject());
+
+            emailList.addView(ev);
+        }
 
         return v;
     }
