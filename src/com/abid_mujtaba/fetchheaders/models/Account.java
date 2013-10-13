@@ -104,9 +104,12 @@ public class Account
             JSONObject root = new JSONObject(content);
             JSONArray accounts = root.getJSONArray("accounts");
 
-            JSONObject account = accounts.getJSONObject(0);         // Pull the first item in the array
+            for (int ii = 0; ii < accounts.length(); ii++)        // Iterate over all accounts in the JSONArray and use each to construct an Account object
+            {
+                JSONObject account = accounts.getJSONObject(ii);
 
-            new Account(account.getString("name"), account.getString("host"), account.getString("username"), account.getString("password"));
+                new Account(account.getString("name"), account.getString("host"), account.getString("username"), account.getString("password"));
+            }
         }
         catch (FileNotFoundException e) { Log.e(Resources.LOGTAG, "Unable to open " + Settings.ACCOUNTS_JSON_FILE, e); }
         catch (IOException e) { Log.e(Resources.LOGTAG, "Unable to close FileInputStream for " + Settings.ACCOUNTS_JSON_FILE, e); }
@@ -183,8 +186,6 @@ public class Account
         try
         {
             Store store = imapSession.getStore("imaps");
-
-            Resources.Logd(String.format("Host: %s. Username: %s. Password: %s.", mHost, mUsername, mPassword));
 
             // Connect to server by sending username and password:
             store.connect(mHost, mUsername, mPassword);
