@@ -22,3 +22,6 @@ local.properties
 
 # IntelliJ IDEA files
 .idea/
+
+# Symbolic Links to jar files in workspace
+src/com/abid_mujtaba/fetchheaders/workspace/*.jar

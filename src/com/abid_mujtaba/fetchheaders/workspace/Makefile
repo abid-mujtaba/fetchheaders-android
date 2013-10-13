@@ -2,5 +2,5 @@
 
 default:
 
-	@javac FetchHeaders.java     # Compiles the source code in to byte code contained in FetchHeaders.class
-	@java FetchHeaders           # Executes the byte code
+	@javac -cp javax.mail-1.5.0.jar:. FetchHeaders.java     # Compiles the source code in to byte code contained in FetchHeaders.class
+	@java -cp javax.mail-1.5.0.jar:. FetchHeaders           # Executes the byte code

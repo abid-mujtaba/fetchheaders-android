@@ -46,4 +46,10 @@ public class Resources
 
         return sb.toString();
     }
+
+
+    public static void Loge(String message, Exception e)
+    {
+        Log.e(LOGTAG, message, e);
+    }
 }
