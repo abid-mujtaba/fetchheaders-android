@@ -1,13 +1,11 @@
 //import com.abid_mujtaba.fetchheaders.Resources;
 
+import com.sun.mail.imap.IMAPFolder;
+
+import java.io.IOException;
 import java.util.Properties;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
 
 
 /**
@@ -33,7 +31,7 @@ public class FetchHeaders
         props.setProperty("mail.store.protocol", "imaps");
         props.setProperty("mail.imaps.host", "mail.physics.tamu.edu");
         props.setProperty("mail.imaps.port", "993");
-        props.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");          // Uses SSL to secure communication
         props.setProperty("mail.imaps.socketFactory.fallback", "false");
 
         Session imapSession = Session.getInstance(props);
@@ -50,7 +48,20 @@ public class FetchHeaders
 
             Message[] messages = inbox.getMessages();
 
-            print(messages[0].getSubject());
+            FetchProfile fp = new FetchProfile();
+            fp.add(IMAPFolder.FetchProfileItem.HEADERS);        // Fetch header data
+            fp.add(FetchProfile.Item.FLAGS);            // Fetch flags
+
+            inbox.fetch(messages, fp);
+
+            Message message = messages[0];
+
+            print(message.getSentDate().toString());
+            print(message.getFrom()[0].toString());
+            print(message.getSubject());
+            print(message.isSet(Flags.Flag.SEEN) + "");
+
+            print("\n" + inbox.getUnreadMessageCount());
         }
         catch (NoSuchProviderException e) {} // Resources.Loge("Unable to get store from imapsession", e); }
         catch (MessagingException e) {} // Resources.Loge("Exception while attempting to connect to mail server", e); }
