@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.abid_mujtaba.fetchheaders.R;
+import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.models.Account;
+import com.abid_mujtaba.fetchheaders.models.Email;
 
 
 public class AccountFragment extends Fragment
@@ -39,6 +41,10 @@ public class AccountFragment extends Fragment
         LinearLayout emailList = (LinearLayout) v.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
 
         tvAccountName.setText(mAccount.name());
+
+        Email[] emails = mAccount.fetchEmails();
+
+        for (int ii = 0; ii < emails.length; ii++) {Resources.Logd(emails[ii].toString());}
 
         return v;
     }

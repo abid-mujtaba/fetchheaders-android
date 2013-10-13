@@ -1,0 +1,56 @@
+package com.abid_mujtaba.fetchheaders.models;
+
+import com.abid_mujtaba.fetchheaders.Resources;
+
+import javax.mail.Address;
+import javax.mail.Flags;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Model representing a single Email object
+ */
+
+public class Email
+{
+    private Message mMessage;
+    private Date mDate;
+    private Address[] mFrom;
+    private String mSubject;
+    private boolean mSeen;
+
+
+    private static final SimpleDateFormat sDateFormat = new SimpleDateFormat("MMM d - h:m a");
+
+
+    public Email(Message message)   // An Email object is constructed as a wrapper around a Message object
+    {
+        mMessage = message;
+
+        try
+        {
+            mDate = message.getSentDate();
+            mFrom = message.getFrom();
+            mSubject = message.getSubject();
+            mSeen = message.isSet(Flags.Flag.SEEN);
+        }
+        catch (MessagingException e) { Resources.Loge("Exception while attempting to connect to mail server", e); }
+    }
+
+
+    public boolean seen() { return mSeen; }
+
+    public String subject() { return mSubject; }
+
+    public String from() { return mFrom[0].toString(); }
+
+    public String date() { return sDateFormat.format(mDate); }
+
+    @Override
+    public String toString()
+    {
+        return String.format("<Email - Date: %s - From: %s - Subject: %s", date(), from(), subject());
+    }
+}

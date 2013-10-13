@@ -5,12 +5,15 @@ import android.util.Log;
 import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.Settings;
 
+import com.sun.mail.imap.IMAPFolder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.mail.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Model representing an email account. It encapsulates the various methods which connect to an email account and interact with it
@@ -162,5 +165,53 @@ public class Account
         }
         catch (JSONException e) { Log.e(Resources.LOGTAG, "Exception raised while manipulate JSON objects.", e); }
         catch (IOException e) { Log.e(Resources.LOGTAG, "Exception raised while saving content to json file.", e); }
+    }
+
+
+    public Email[] fetchEmails()         // Fetches messages from account and uses them to create an array of Email objects
+    {
+        Properties props = new Properties();
+
+        props.setProperty("mail.store.protocol", "imaps");
+        props.setProperty("mail.imaps.host", "mail.physics.tamu.edu");
+        props.setProperty("mail.imaps.port", "993");
+        props.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");          // Uses SSL to secure communication
+        props.setProperty("mail.imaps.socketFactory.fallback", "false");
+
+        Session imapSession = Session.getInstance(props);
+
+        try
+        {
+            Store store = imapSession.getStore("imaps");
+
+            Resources.Logd(String.format("Host: %s. Username: %s. Password: %s.", mHost, mUsername, mPassword));
+
+            // Connect to server by sending username and password:
+            store.connect(mHost, mUsername, mPassword);
+
+            Folder inbox = store.getFolder("Inbox");
+            inbox.open(Folder.READ_ONLY);               // Open Inbox as read-only
+
+            Message[] messages = inbox.getMessages();
+
+            FetchProfile fp = new FetchProfile();
+            fp.add(IMAPFolder.FetchProfileItem.HEADERS);        // Fetch header data
+            fp.add(FetchProfile.Item.FLAGS);            // Fetch flags
+
+            inbox.fetch(messages, fp);
+
+            Email[] emails = new Email[messages.length];
+
+            for (int ii = 0; ii < messages.length; ii++)
+            {
+                emails[ii] = new Email(messages[ii]);
+            }
+
+            return emails;
+        }
+        catch (NoSuchProviderException e) { Resources.Loge("Unable to get store from imapsession", e); }
+        catch (MessagingException e) { Resources.Loge("Exception while attempting to connect to mail server", e); }
+
+        throw new RuntimeException("Execution should never get to this point");
     }
 }
