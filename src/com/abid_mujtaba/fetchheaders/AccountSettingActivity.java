@@ -79,11 +79,13 @@ public class AccountSettingActivity extends Activity
                 String username = edtUsername.getText().toString();
                 String password = edtPassword.getText().toString();
 
+                if (mAccount == null) { mAccount = Account.newInstance(); }     // This means a new account is being created. The following update command will populate it.
+
                 // Update correspondong Account object which in turn updates the accounts.json file
                 mAccount.update(name, host, username, password);
 
                 // Return to MainActivity
-                startActivity(new Intent("com.abid_mujtaba.fetchheaders.MainActivity"));
+                startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountsActivity"));
                 finish();
             }
         });

@@ -51,6 +51,11 @@ public class Account
         mPassword = _password;
     }
 
+    public static Account newInstance()         // creates and return an empty instance of Account. update() should be called immediately after to populate it.
+    {
+        return new Account();
+    }
+
     public String name() { return mName; }
     public String host() { return mHost; }
     public String username() { return mUsername; }
