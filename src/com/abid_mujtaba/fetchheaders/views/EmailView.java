@@ -5,6 +5,7 @@ package com.abid_mujtaba.fetchheaders.views;
  */
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,5 +33,19 @@ public class EmailView extends LinearLayout
         tvDate.setText(_date);
         tvFrom.setText(_from);
         tvSubject.setText(_subject);
+    }
+
+    public void strikethrough()     // Strikes through the subject textview to indicate that the email is marked for deletion
+    {
+        tvSubject.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        tvDate.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        tvFrom.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+    }
+
+    public void removeStrikethrough()          // Removes strike through of the subject since the email has been undeleted
+    {
+        tvSubject.setPaintFlags(tvSubject.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+        tvDate.setPaintFlags(tvSubject.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+        tvFrom.setPaintFlags(tvSubject.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
     }
 }

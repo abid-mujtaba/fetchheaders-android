@@ -2,7 +2,6 @@ package com.abid_mujtaba.fetchheaders.models;
 
 import com.abid_mujtaba.fetchheaders.Resources;
 
-import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -21,6 +20,8 @@ public class Email
     private String mFrom;
     private String mSubject;
     private boolean mSeen;
+
+    private boolean mToBeDeleted = false;
 
 
     private static final SimpleDateFormat sDateFormat = new SimpleDateFormat("MMM d - h:m a");
@@ -59,4 +60,8 @@ public class Email
     {
         return String.format("<Email - Date: %s - From: %s - Subject: %s", date(), from(), subject());
     }
+
+    public void toggleDeletion() { mToBeDeleted = ! mToBeDeleted; }     // Toggles the ToBeDeleted flag
+
+    public boolean isToBeDeleted() { return mToBeDeleted; }
 }

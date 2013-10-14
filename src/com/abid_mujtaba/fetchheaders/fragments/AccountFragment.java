@@ -21,6 +21,7 @@ import com.abid_mujtaba.fetchheaders.views.EmailView;
 public class AccountFragment extends Fragment
 {
     private Account mAccount;
+    private Email[] mEmails;
 
     public static AccountFragment newInstance(int account_id)
     {
@@ -42,18 +43,48 @@ public class AccountFragment extends Fragment
 
         tvAccountName.setText(mAccount.name());
 
-        Email[] emails = mAccount.fetchEmails();
+        mEmails = mAccount.fetchEmails();
 
-        for (int ii = 0; ii < emails.length; ii++)
+        for (int ii = 0; ii < mEmails.length; ii++)
         {
-            Email email = emails[ii];
+            Email email = mEmails[ii];
 
             EmailView ev = new EmailView(this.getActivity(), null);
             ev.setInfo(email.date(), email.from(), email.subject());
+            ev.setId(ii);
+            ev.setOnClickListener(listener);
 
             emailList.addView(ev);
         }
 
         return v;
+    }
+
+
+    View.OnClickListener listener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view)
+        {
+            Email email = mEmails[view.getId()];
+            EmailView ev = (EmailView) view;
+
+            email.toggleDeletion();
+
+            if (email.isToBeDeleted())
+            {
+                ev.strikethrough();
+            }
+            else
+            {
+                ev.removeStrikethrough();
+            }
+        }
+    };
+
+
+    public void refresh()           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
+    {
+
     }
 }
