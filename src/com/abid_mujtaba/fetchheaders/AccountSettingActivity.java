@@ -26,10 +26,11 @@ public class AccountSettingActivity extends Activity
         setContentView(R.layout.account_setting);
 
         Bundle bdl = getIntent().getExtras();
-        int account_id = bdl.getInt(Resources.BUNDLE_ACCOUNT_ID, -1);
 
-        if (account_id >= 0)            // account_id < 0 means no account id was passed and in and so we are creating a new Account.
+        if (bdl != null)
         {
+            int account_id = bdl.getInt(Resources.BUNDLE_ACCOUNT_ID);
+
             mAccount = Account.get(account_id);
         }
 
@@ -60,7 +61,7 @@ public class AccountSettingActivity extends Activity
             @Override
             public void onClick(View view)
             {
-                startActivity(new Intent("com.abid_mujtaba.fetchheaders.MainActivity"));
+                startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountsActivity"));
 
                 finish();     // Leave the AccountsActivity and return to the Main Screen
             }

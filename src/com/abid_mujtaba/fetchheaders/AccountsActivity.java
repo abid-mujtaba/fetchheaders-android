@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.abid_mujtaba.fetchheaders.models.Account;
@@ -54,4 +53,33 @@ public class AccountsActivity extends Activity {
             finish();
         }
     };
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.accounts_menu, menu);
+
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.menu_add_account:
+
+                startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountSettingActivity"));
+                finish();
+
+                return true;
+
+            default:
+
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
