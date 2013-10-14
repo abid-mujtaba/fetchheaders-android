@@ -7,15 +7,20 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.fragments.AccountFragment;
 import com.abid_mujtaba.fetchheaders.models.Account;
 
+import java.util.ArrayList;
+
 public class MainActivity extends FragmentActivity
 {
     private LinearLayout scrollList;
+
+    private ArrayList<AccountFragment> mFragments = new ArrayList<AccountFragment>();      // Stores all fragments added to this activity
 
 
     @Override
@@ -25,6 +30,9 @@ public class MainActivity extends FragmentActivity
         setContentView(R.layout.main);
 
         scrollList = (LinearLayout) findViewById(R.id.scrollList);
+        TextView title = (TextView) findViewById(R.id.main_title);
+
+        title.setOnClickListener(listener);
 
         if (Account.numberOfAccounts() > 0)             // Accounts have been specified
         {
@@ -37,6 +45,8 @@ public class MainActivity extends FragmentActivity
             {
                 AccountFragment aF = AccountFragment.newInstance(ii);       // We create a new account fragment and specify the number of the Account associated with it
                 ft.add(R.id.scrollList, aF);
+
+                mFragments.add(aF);
             }
 
             ft.commit();
@@ -71,4 +81,21 @@ public class MainActivity extends FragmentActivity
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    View.OnClickListener listener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View view)
+        {
+            for (AccountFragment fragment: mFragments)
+            {
+                fragment.refresh();
+            }
+
+            Intent i = getIntent();     // We restart the MainActivity with the same intent it was started with
+            finish();
+            startActivity(i);
+        }
+    };
 }
