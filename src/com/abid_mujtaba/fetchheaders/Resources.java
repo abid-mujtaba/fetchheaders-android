@@ -20,6 +20,8 @@ public class Resources
 
     public static final String LOGTAG = "fetchheaders";
 
+    public static final String BUNDLE_ACCOUNT_ID = "account_id";       // Used on both ends of a bundle (both for putting and extracting data)
+
 
     public static String getStringFromInputStream(InputStream is)       // Based on http://www.mkyong.com/java/how-to-convert-inputstream-to-string-in-java/
     {
