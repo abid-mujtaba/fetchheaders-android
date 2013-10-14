@@ -32,5 +32,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".AccountSettingActivity"
+            android:label="AccountSettingActivity">
+            <intent-filter>
+                <action android:name="com.abid_mujtaba.fetchheaders.AccountSettingActivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
     </application>
 </manifest> 
