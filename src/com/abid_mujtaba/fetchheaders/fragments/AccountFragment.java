@@ -5,6 +5,7 @@ package com.abid_mujtaba.fetchheaders.fragments;
  */
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.abid_mujtaba.fetchheaders.R;
 import com.abid_mujtaba.fetchheaders.Resources;
+import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
 import com.abid_mujtaba.fetchheaders.models.Email;
 import com.abid_mujtaba.fetchheaders.views.EmailView;
@@ -40,23 +42,41 @@ public class AccountFragment extends Fragment
         View v = inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
 
         TextView tvAccountName = (TextView) v.findViewById(R.id.tvAccountName);
-        LinearLayout emailList = (LinearLayout) v.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
+        final LinearLayout emailList = (LinearLayout) v.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
 
         tvAccountName.setText(mAccount.name());
 
-        mEmails = mAccount.fetchEmails();
+        final Handler handler = new Handler();      // Create a handler to give access to the UI Thread in this fragment
 
-        for (int ii = 0; ii < mEmails.length; ii++)
-        {
-            Email email = mEmails[ii];
+        Runnable fetchEmails = new Runnable() {
 
-            EmailView ev = new EmailView(this.getActivity(), null);
-            ev.setInfo(email.date(), email.from(), email.subject());
-            ev.setId(ii);
-            ev.setOnClickListener(listener);
+            @Override
+            public void run()
+            {
+                mEmails = mAccount.fetchEmails();
 
-            emailList.addView(ev);
-        }
+                handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
+
+                    @Override
+                    public void run()
+                    {
+                        for (int ii = 0; ii < mEmails.length; ii++)
+                        {
+                            Email email = mEmails[ii];
+
+                            EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
+                            ev.setInfo(email.date(), email.from(), email.subject());
+                            ev.setId(ii);
+                            ev.setOnClickListener(listener);
+
+                            emailList.addView(ev);
+                        }
+                    }
+                });
+            }
+        };
+
+        ThreadPool.executeTask(fetchEmails);        // Execute this runnable on a background thread, part of a pool
 
         return v;
     }
