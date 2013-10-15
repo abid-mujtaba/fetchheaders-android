@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.fragments.AccountFragment;
+import com.abid_mujtaba.fetchheaders.misc.Counter;
+import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
 
 import java.util.ArrayList;
@@ -88,14 +90,29 @@ public class MainActivity extends FragmentActivity
         @Override
         public void onClick(View view)
         {
-            for (AccountFragment fragment: mFragments)
-            {
-                fragment.refresh();
-            }
+            final Counter counter = new Counter(mFragments.size());         // Declare a counter to count down the fragments refreshing
 
-            Intent i = getIntent();     // We restart the MainActivity with the same intent it was started with
-            finish();
-            startActivity(i);
+            for (final AccountFragment fragment: mFragments)
+            {
+                Runnable refresh = new Runnable() {
+
+                    @Override
+                    public void run()
+                    {
+                        fragment.refresh();
+                        counter.decrement();        // The counter is decremented
+
+                        if (counter.value() == 0)           // If all fragments have been refreshed. The last fragment to refresh will cause the Activity to change
+                        {
+                            Intent i = getIntent();     // We restart the MainActivity with the same intent it was started with. This causes emails to be fetched again. Emails deleted while issuing fragment.refresh() will not appear.
+                            finish();
+                            startActivity(i);
+                        }
+                    }
+                };
+
+                ThreadPool.executeTask(refresh);
+            }
         }
     };
 }
