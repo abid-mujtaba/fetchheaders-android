@@ -31,6 +31,9 @@ public class Account
     private static ArrayList<Account> sInstances = new ArrayList<Account>();
     private static int sNumOfInstances = 0;
 
+    private Message[] mMessages;        // Stores the Message objects fetched from the email account
+    private Folder mInbox;              // Stores reference to the Inbox object, will be used to delete emails.
+
 
     private Account()        // Default empty constructor used to track objects
     {
@@ -199,22 +202,22 @@ public class Account
             }
             catch (AuthenticationFailedException e) { Resources.Logd("Authentication failure while connecting to: " + mHost); return null; }    // A null returned indicates that an Authentication Failure occurred.
 
-            Folder inbox = store.getFolder("Inbox");
-            inbox.open(Folder.READ_ONLY);               // Open Inbox as read-only
+            mInbox = store.getFolder("Inbox");
+            mInbox.open(Folder.READ_WRITE);               // Open Inbox as read-write since we will be deleting emails laster
 
-            Message[] messages = inbox.getMessages();
+            mMessages = mInbox.getMessages();
 
             FetchProfile fp = new FetchProfile();
             fp.add(IMAPFolder.FetchProfileItem.HEADERS);        // Fetch header data
             fp.add(FetchProfile.Item.FLAGS);            // Fetch flags
 
-            inbox.fetch(messages, fp);
+            mInbox.fetch(mMessages, fp);
 
-            Email[] emails = new Email[messages.length];
+            Email[] emails = new Email[mMessages.length];
 
-            for (int ii = 0; ii < messages.length; ii++)
+            for (int ii = 0; ii < mMessages.length; ii++)
             {
-                emails[ii] = new Email(messages[ii]);
+                emails[ii] = new Email(mMessages[ii]);
             }
 
             return emails;
@@ -223,5 +226,20 @@ public class Account
         catch (MessagingException e) { Resources.Loge("Exception while attempting to connect to mail server", e); }
 
         throw new RuntimeException("Execution should never get to this point");
+    }
+
+
+    public void delete(ArrayList<Integer> ids)  // Delete emails with the specified ids
+    {
+        try
+        {
+            for (Integer id: ids)
+            {
+                mMessages[id].setFlag(Flags.Flag.DELETED, true);        // We mark the email for deletion
+            }
+
+            mInbox.close(true);         // This will cause the emails marked for deletion to be actually deleted.
+        }
+        catch (MessagingException e) { Resources.Loge("Exception raised while attempting to delete emails.", e); }
     }
 }

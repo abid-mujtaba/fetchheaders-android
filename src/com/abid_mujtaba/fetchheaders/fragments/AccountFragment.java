@@ -15,11 +15,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.abid_mujtaba.fetchheaders.R;
-import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
 import com.abid_mujtaba.fetchheaders.models.Email;
 import com.abid_mujtaba.fetchheaders.views.EmailView;
+
+import java.util.ArrayList;
 
 
 public class AccountFragment extends Fragment
@@ -134,6 +135,14 @@ public class AccountFragment extends Fragment
 
     public void refresh()           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
     {
-        Resources.Logd("Fragment refreshed.");
+        // We iterate over the emails weeding out the emails marked for deletion
+        ArrayList<Integer> ids = new ArrayList<Integer>();
+
+        for (int ii = 0; ii < mEmails.length; ii++)
+        {
+            if (mEmails[ii].isToBeDeleted()) { ids.add(ii); }
+        }
+
+        mAccount.delete(ids);       // Send the ids to the Account object to delete it.
     }
 }
