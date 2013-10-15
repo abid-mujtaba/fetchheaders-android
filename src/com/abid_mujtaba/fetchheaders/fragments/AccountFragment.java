@@ -4,6 +4,7 @@ package com.abid_mujtaba.fetchheaders.fragments;
  * This fragment implements showing the email information for a single account.
  */
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,10 @@ public class AccountFragment extends Fragment
 
         tvAccountName.setText(mAccount.name());
 
+        LayoutInflater li = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View pb = li.inflate(R.layout.progress_view, null);
+        emailList.addView(pb);
+
         final Handler handler = new Handler();      // Create a handler to give access to the UI Thread in this fragment
 
         Runnable fetchEmails = new Runnable() {
@@ -62,6 +67,8 @@ public class AccountFragment extends Fragment
                         @Override
                         public void run()
                         {
+                            emailList.removeView(pb);
+
                             for (int ii = 0; ii < mEmails.length; ii++)
                             {
                                 Email email = mEmails[ii];
@@ -83,6 +90,8 @@ public class AccountFragment extends Fragment
                         @Override
                         public void run()
                         {
+                            emailList.removeView(pb);
+
                             // TODO: Create a custom layout for Error TextViews in general to be used in such cases. Possibly add a triangular icon indicating an error.
 
                             TextView tv = new TextView(getActivity());
