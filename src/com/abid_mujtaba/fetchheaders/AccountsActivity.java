@@ -82,4 +82,12 @@ public class AccountsActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    @Override
+    public void onBackPressed()         // Override the behaviour of the back button
+    {
+        startActivity(new Intent("com.abid_mujtaba.fetchheaders.MainActivity"));
+        finish();
+    }
 }
