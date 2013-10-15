@@ -55,24 +55,43 @@ public class AccountFragment extends Fragment
             {
                 mEmails = mAccount.fetchEmails();
 
-                handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
+                if (mEmails != null)
+                {
+                    handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
 
-                    @Override
-                    public void run()
-                    {
-                        for (int ii = 0; ii < mEmails.length; ii++)
+                        @Override
+                        public void run()
                         {
-                            Email email = mEmails[ii];
+                            for (int ii = 0; ii < mEmails.length; ii++)
+                            {
+                                Email email = mEmails[ii];
 
-                            EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
-                            ev.setInfo(email.date(), email.from(), email.subject());
-                            ev.setId(ii);
-                            ev.setOnClickListener(listener);
+                                EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
+                                ev.setInfo(email.date(), email.from(), email.subject());
+                                ev.setId(ii);
+                                ev.setOnClickListener(listener);
 
-                            emailList.addView(ev);
+                                emailList.addView(ev);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else
+                {
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run()
+                        {
+                            // TODO: Create a custom layout for Error TextViews in general to be used in such cases. Possibly add a triangular icon indicating an error.
+
+                            TextView tv = new TextView(getActivity());
+                            tv.setText("Authentication Failure. Verify credentials.");
+
+                            emailList.addView(tv);
+                        }
+                    });
+                }
             }
         };
 

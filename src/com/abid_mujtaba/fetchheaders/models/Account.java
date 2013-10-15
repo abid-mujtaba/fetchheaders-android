@@ -193,7 +193,11 @@ public class Account
             Store store = imapSession.getStore("imaps");
 
             // Connect to server by sending username and password:
-            store.connect(mHost, mUsername, mPassword);
+            try
+            {
+                store.connect(mHost, mUsername, mPassword);
+            }
+            catch (AuthenticationFailedException e) { Resources.Logd("Authentication failure while connecting to: " + mHost); return null; }    // A null returned indicates that an Authentication Failure occurred.
 
             Folder inbox = store.getFolder("Inbox");
             inbox.open(Folder.READ_ONLY);               // Open Inbox as read-only
