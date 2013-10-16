@@ -41,9 +41,9 @@ public class AccountFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
+        final View v = inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
 
-        TextView tvAccountName = (TextView) v.findViewById(R.id.tvAccountName);
+        final TextView tvAccountName = (TextView) v.findViewById(R.id.tvAccountName);
         final LinearLayout emailList = (LinearLayout) v.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
 
         tvAccountName.setText(mAccount.name());
@@ -63,26 +63,44 @@ public class AccountFragment extends Fragment
 
                 if (mEmails != null)
                 {
-                    handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
+                    if (mEmails.length > 0)
+                    {
+                        handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
 
-                        @Override
-                        public void run()
-                        {
-                            emailList.removeView(pb);
-
-                            for (int ii = 0; ii < mEmails.length; ii++)
+                            @Override
+                            public void run()
                             {
-                                Email email = mEmails[ii];
+                                emailList.removeView(pb);
 
-                                EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
-                                ev.setInfo(email.date(), email.from(), email.subject());
-                                ev.setId(ii);
-                                ev.setOnClickListener(listener);
+                                for (int ii = 0; ii < mEmails.length; ii++)
+                                {
+                                    Email email = mEmails[ii];
 
-                                emailList.addView(ev);
+                                    EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
+                                    ev.setInfo(email.date(), email.from(), email.subject());
+                                    ev.setId(ii);
+                                    ev.setOnClickListener(listener);
+
+                                    emailList.addView(ev);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    else        // No emails extracted so we remove the account from the list displayed
+                    {
+                        handler.post(new Runnable() {
+
+                            @Override
+                            public void run()
+                            {
+                                ((LinearLayout) v).removeView(tvAccountName);       // Remove account title
+
+                                ViewGroup.LayoutParams params = v.getLayoutParams();     // Collapse height of fragment layout to 0
+                                params.height = 0;
+                                v.setLayoutParams(params);
+                            }
+                        });
+                    }
                 }
                 else
                 {

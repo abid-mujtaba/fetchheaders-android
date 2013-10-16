@@ -33,6 +33,9 @@ public class Account
 
     private Message[] mMessages;        // Stores the Message objects fetched from the email account
     private Folder mInbox;              // Stores reference to the Inbox object, will be used to delete emails.
+    private Folder mTrash;              // Trash Folder on the email account
+
+    private boolean mUsesLabels = false;        // This flag indicates that the email account uses Labels rather than Folders (Gmail being the most common example)
 
 
     private Account()        // Default empty constructor used to track objects
@@ -205,6 +208,20 @@ public class Account
             mInbox = store.getFolder("Inbox");
             mInbox.open(Folder.READ_WRITE);               // Open Inbox as read-write since we will be deleting emails laster
 
+            mTrash = store.getFolder("Trash");
+
+            if (!mTrash.exists())
+            {
+                mTrash = store.getFolder("[Gmail]/Trash");        // If a folder labelled "Trash" doesn't exist we attempt to check if it is a Gmail account whose trash folder is differently named
+                mUsesLabels = true;                               // Set flag to indicate that this account uses Labels rather than folders a la Gmail
+
+                if (!mTrash.exists())
+                {
+                    mTrash = null;         // No trash folder found. Emails will be deleted directly
+                    mUsesLabels = false;
+                }
+            }
+
             mMessages = mInbox.getMessages();
 
             FetchProfile fp = new FetchProfile();
@@ -231,11 +248,19 @@ public class Account
 
     public void delete(ArrayList<Integer> ids)  // Delete emails with the specified ids
     {
+        Message[] messages = new Message[ids.size()];
         try
         {
-            for (Integer id: ids)
+            for (int ii = 0; ii < ids.size(); ii++)
             {
-                mMessages[id].setFlag(Flags.Flag.DELETED, true);        // We mark the email for deletion
+                messages[ii] = mMessages[ids.get(ii)];
+            }
+
+            if (mTrash != null) { mInbox.copyMessages(messages, mTrash); }
+
+            if (! mUsesLabels)          // For Gmail-type accounts (that use Labels rather than folders) copying the message to Trash is enough to carry out deletion.
+            {
+                mInbox.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
             }
 
             mInbox.close(true);         // This will cause the emails marked for deletion to be actually deleted.
