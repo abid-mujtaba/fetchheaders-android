@@ -55,6 +55,8 @@ public class Email
 
     public String date() { return sDateFormat.format(mDate); }
 
+    public Message message() { return mMessage; }
+
     @Override
     public String toString()
     {

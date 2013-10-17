@@ -182,7 +182,7 @@ public class Account
     }
 
 
-    public Email[] fetchEmails()         // Fetches messages from account and uses them to create an array of Email objects
+    public ArrayList<Email> fetchEmails(boolean unSeenOnly)         // Fetches messages from account and uses them to create an array of Email objects
     {
         Properties props = new Properties();
 
@@ -230,11 +230,23 @@ public class Account
 
             mInbox.fetch(mMessages, fp);
 
-            Email[] emails = new Email[mMessages.length];
+            ArrayList<Email> emails = new ArrayList<Email>();
 
-            for (int ii = 0; ii < mMessages.length; ii++)
+            for (Message message: mMessages)
             {
-                emails[ii] = new Email(mMessages[ii]);
+                Email email = new Email(message);
+
+                if (unSeenOnly)
+                {
+                    if (! email.seen())
+                    {
+                        emails.add(email);
+                    }
+                }
+                else                    // Since unSeenOnly is false all emails are sent through
+                {
+                    emails.add(email);
+                }
             }
 
             return emails;
@@ -246,14 +258,14 @@ public class Account
     }
 
 
-    public void delete(ArrayList<Integer> ids)  // Delete emails with the specified ids
+    public void delete(ArrayList<Email> emails)  // Delete emails with the specified ids
     {
-        Message[] messages = new Message[ids.size()];
+        Message[] messages = new Message[emails.size()];
         try
         {
-            for (int ii = 0; ii < ids.size(); ii++)
+            for (int ii = 0; ii < emails.size(); ii++)
             {
-                messages[ii] = mMessages[ids.get(ii)];
+                messages[ii] = emails.get(ii).message();
             }
 
             if (mTrash != null) { mInbox.copyMessages(messages, mTrash); }

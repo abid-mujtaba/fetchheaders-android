@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class AccountFragment extends Fragment
 {
     private Account mAccount;
-    private Email[] mEmails;
+    private ArrayList<Email> mEmails;
 
     public static AccountFragment newInstance(int account_id)
     {
@@ -59,11 +59,11 @@ public class AccountFragment extends Fragment
             @Override
             public void run()
             {
-                mEmails = mAccount.fetchEmails();
+                mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
 
                 if (mEmails != null)
                 {
-                    if (mEmails.length > 0)
+                    if (mEmails.size() > 0)
                     {
                         handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
 
@@ -72,9 +72,9 @@ public class AccountFragment extends Fragment
                             {
                                 emailList.removeView(pb);
 
-                                for (int ii = 0; ii < mEmails.length; ii++)
+                                for (int ii = 0; ii < mEmails.size(); ii++)
                                 {
-                                    Email email = mEmails[ii];
+                                    Email email = mEmails.get(ii);
 
                                     EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
                                     ev.setInfo(email.date(), email.from(), email.subject());
@@ -134,7 +134,7 @@ public class AccountFragment extends Fragment
         @Override
         public void onClick(View view)
         {
-            Email email = mEmails[view.getId()];
+            Email email = mEmails.get(view.getId());
             EmailView ev = (EmailView) view;
 
             email.toggleDeletion();
@@ -154,13 +154,13 @@ public class AccountFragment extends Fragment
     public void refresh()           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
     {
         // We iterate over the emails weeding out the emails marked for deletion
-        ArrayList<Integer> ids = new ArrayList<Integer>();
+        ArrayList<Email> emails = new ArrayList<Email>();
 
-        for (int ii = 0; ii < mEmails.length; ii++)
+        for (Email email: mEmails)
         {
-            if (mEmails[ii].isToBeDeleted()) { ids.add(ii); }
+            if (email.isToBeDeleted()) { emails.add(email); }
         }
 
-        mAccount.delete(ids);       // Send the ids to the Account object to delete it.
+        mAccount.delete(emails);
     }
 }
