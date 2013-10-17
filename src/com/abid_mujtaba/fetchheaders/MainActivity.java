@@ -38,13 +38,6 @@ public class MainActivity extends FragmentActivity
         scrollList = (LinearLayout) findViewById(R.id.scrollList);
         TextView title = (TextView) findViewById(R.id.main_title);
 
-//        ImageView title = (ImageView) findViewById(R.id.main_title);
-
-//        SVG svg = SVGParser.getSVGFromResource(getResources(), R.raw.website);
-//        Drawable svg_title = svg.createPictureDrawable();
-//
-//        title.setImageDrawable(svg_title);
-
         title.setOnClickListener(listener);
 
         if (Account.numberOfAccounts() > 0)             // Accounts have been specified
