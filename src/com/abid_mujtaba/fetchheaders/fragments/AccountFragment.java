@@ -14,12 +14,18 @@ import android.view.ViewGroup;
 
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.abid_mujtaba.fetchheaders.R;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
 import com.abid_mujtaba.fetchheaders.models.Email;
 import com.abid_mujtaba.fetchheaders.views.EmailView;
 
+import com.sun.mail.util.MailConnectException;
+
+import javax.mail.AuthenticationFailedException;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
 import java.util.ArrayList;
 
 
@@ -56,13 +62,36 @@ public class AccountFragment extends Fragment
 
         Runnable fetchEmails = new Runnable() {
 
+            class ExceptionRunnable implements Runnable {       // The Runnable inner sub-class to be executed if an exception is raised
+
+                private String mErrorMessage = "";
+
+                public ExceptionRunnable(String error_message)      // The Runnable is declared with an error message
+                {
+                    mErrorMessage = error_message;
+                }
+
+                @Override
+                public void run()
+                {
+                    emailList.removeView(pb);
+
+                    // TODO: Create a custom layout for Error TextViews in general to be used in such cases. Possibly add a triangular icon indicating an error.
+
+                    TextView tv = new TextView(getActivity());
+                    tv.setText( mErrorMessage );
+
+                    emailList.addView(tv);
+                }
+            }
+
             @Override
             public void run()
             {
-                mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
-
-                if (mEmails != null)
+                try
                 {
+                    mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
+
                     if (mEmails.size() > 0)
                     {
                         handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
@@ -102,24 +131,10 @@ public class AccountFragment extends Fragment
                         });
                     }
                 }
-                else
-                {
-                    handler.post(new Runnable() {
-
-                        @Override
-                        public void run()
-                        {
-                            emailList.removeView(pb);
-
-                            // TODO: Create a custom layout for Error TextViews in general to be used in such cases. Possibly add a triangular icon indicating an error.
-
-                            TextView tv = new TextView(getActivity());
-                            tv.setText("Authentication Failure. Verify credentials.");
-
-                            emailList.addView(tv);
-                        }
-                    });
-                }
+                catch(NoSuchProviderException e) { handler.post(new ExceptionRunnable("No Such Provider found. Verify credentials.")); }
+                catch(AuthenticationFailedException e) { handler.post(new ExceptionRunnable("Authentication Failure. Verify credentials.")); }
+                catch(MailConnectException e) { handler.post(new ExceptionRunnable("Unable to connect to Mail Server.")); }
+                catch(MessagingException e) { handler.post(new ExceptionRunnable("Messaging Error. Verify Credentials.")); }
             }
         };
 

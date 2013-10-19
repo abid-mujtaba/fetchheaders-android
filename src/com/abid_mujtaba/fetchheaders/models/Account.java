@@ -6,12 +6,27 @@ import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.Settings;
 
 import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.util.MailConnectException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.mail.*;
-import java.io.*;
+import javax.mail.AuthenticationFailedException;
+import javax.mail.FetchProfile;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Store;
+
+
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -182,13 +197,13 @@ public class Account
     }
 
 
-    public ArrayList<Email> fetchEmails(boolean unSeenOnly)         // Fetches messages from account and uses them to create an array of Email objects
+    public ArrayList<Email> fetchEmails(boolean unSeenOnly) throws NoSuchProviderException, AuthenticationFailedException, MailConnectException, MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
     {
         Properties props = new Properties();
 
         props.setProperty("mail.store.protocol", "imaps");
-        props.setProperty("mail.imaps.host", "mail.physics.tamu.edu");
-        props.setProperty("mail.imaps.port", "993");
+//        props.setProperty("mail.imaps.host", mHost);
+//        props.setProperty("mail.imaps.port", "993");
         props.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");          // Uses SSL to secure communication
         props.setProperty("mail.imaps.socketFactory.fallback", "false");
 
@@ -199,11 +214,7 @@ public class Account
             Store store = imapSession.getStore("imaps");
 
             // Connect to server by sending username and password:
-            try
-            {
-                store.connect(mHost, mUsername, mPassword);
-            }
-            catch (AuthenticationFailedException e) { Resources.Logd("Authentication failure while connecting to: " + mHost); return null; }    // A null returned indicates that an Authentication Failure occurred.
+            store.connect(mHost, mUsername, mPassword);
 
             mInbox = store.getFolder("Inbox");
             mInbox.open(Folder.READ_WRITE);               // Open Inbox as read-write since we will be deleting emails laster
@@ -251,10 +262,10 @@ public class Account
 
             return emails;
         }
-        catch (NoSuchProviderException e) { Resources.Loge("Unable to get store from imapsession", e); }
-        catch (MessagingException e) { Resources.Loge("Exception while attempting to connect to mail server", e); }
-
-        throw new RuntimeException("Execution should never get to this point");
+        catch (NoSuchProviderException e) { Resources.Loge("Unable to get store from imapsession", e); throw e; }       // We log all of the possible exceptions and then re-throw them forcing the calling function to handle them - this includes using the UI to report errors to the user.
+        catch (AuthenticationFailedException e) { Resources.Loge("Authentication failure while connecting to: " + mHost, e); throw e; }
+        catch (MailConnectException e) { Resources.Loge("MailConnectException - Unable to connect to: " + mHost, e); throw e; }
+        catch (MessagingException e) { Resources.Loge("Exception while attempting to connect to mail server", e); throw e; }         // The two above exceptions are caught by this one if they are not explicitly stated above.
     }
 
 
