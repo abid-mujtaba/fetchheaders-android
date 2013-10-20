@@ -27,13 +27,14 @@ import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class AccountFragment extends Fragment
 {
     private Account mAccount;
-    private ArrayList<Email> mEmails;
-    private ArrayList<EmailView> mEmailViews;         // Keeps track of the views associated with emails
+    private HashMap<Integer, Email> mEmails;                 // We use HashMaps so we can delete emails with impunity yet still have access to remaining emails with the same integer index
+    private HashMap<Integer, EmailView> mEmailViews;         // Keeps track of the views associated with emails
 
     private LinearLayout mEmailList;
 
@@ -94,7 +95,7 @@ public class AccountFragment extends Fragment
                 try
                 {
                     mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
-                    mEmailViews = new ArrayList<EmailView>();
+                    mEmailViews = new HashMap<Integer, EmailView>();
 
                     if (mEmails.size() > 0)
                     {
@@ -105,17 +106,17 @@ public class AccountFragment extends Fragment
                             {
                                 mEmailList.removeView(pb);
 
-                                for (int ii = 0; ii < mEmails.size(); ii++)
+                                for (Integer key: mEmails.keySet())             // We iterate over the key (unique int id) associated with the Email objects and in turn associate the EmailView Id and its position in its own HashMap with the same key for cross-referencing
                                 {
-                                    Email email = mEmails.get(ii);
+                                    Email email = mEmails.get(key);
 
                                     EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
                                     ev.setInfo(email.date(), email.from(), email.subject());
-                                    ev.setId(ii);
+                                    ev.setId(key);
                                     ev.setOnClickListener(listener);
 
                                     mEmailList.addView(ev);
-                                    mEmailViews.add(ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
+                                    mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
                                 }
                             }
                         });
@@ -175,18 +176,19 @@ public class AccountFragment extends Fragment
     {
         // We iterate over the emails weeding out the emails marked for deletion
         ArrayList<Email> emails = new ArrayList<Email>();
+        ArrayList<Integer> keys = new ArrayList<Integer>();     // We store the keys that we have to delete from the HashMap. We can't do it while we are traversing the key set itself
 
-        for (int ii = 0; ii < mEmails.size(); ii++)
+        for(Integer key: mEmails.keySet())              // We iterate over the keys in the HashMap. This way we know that we are iterating over existing objects and have access to their unique keys
         {
-            Email email = mEmails.get(ii);
-            mEmails.remove(ii);                 // Since we are deleting the email we remove it from the ArrayList
+            Email email = mEmails.get(key);
 
             if (email.isToBeDeleted())
             {
                 emails.add(email);
+                keys.add(key);
 
-                final EmailView email_view = mEmailViews.get(ii);
-                mEmailViews.remove(ii);         // Since we are deleting the email we remove the corresponding view from the ArrayList
+                final EmailView email_view = mEmailViews.get(key);
+                mEmailViews.remove(key);         // Since we are deleting the email we remove the corresponding view from the ArrayList
 
                 handler.post(new Runnable() {
 
@@ -200,5 +202,7 @@ public class AccountFragment extends Fragment
         }
 
         mAccount.delete(emails);
+
+        for (Integer key: keys) { mEmails.remove(key); }            // Remove the Email objects corresponding to the deleted emails from the HashMap
     }
 }

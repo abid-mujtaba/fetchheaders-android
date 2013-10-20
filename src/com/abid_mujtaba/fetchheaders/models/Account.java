@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 /**
@@ -197,7 +198,7 @@ public class Account
     }
 
 
-    public ArrayList<Email> fetchEmails(boolean unSeenOnly) throws NoSuchProviderException, AuthenticationFailedException, MailConnectException, MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
+    public HashMap<Integer, Email> fetchEmails(boolean unSeenOnly) throws NoSuchProviderException, AuthenticationFailedException, MailConnectException, MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
     {
         Properties props = new Properties();
 
@@ -217,7 +218,7 @@ public class Account
             store.connect(mHost, mUsername, mPassword);
 
             mInbox = store.getFolder("Inbox");
-            mInbox.open(Folder.READ_WRITE);               // Open Inbox as read-write since we will be deleting emails laster
+            mInbox.open(Folder.READ_WRITE);               // Open Inbox as read-write since we will be deleting emails later
 
             mTrash = store.getFolder("Trash");
 
@@ -241,22 +242,22 @@ public class Account
 
             mInbox.fetch(mMessages, fp);
 
-            ArrayList<Email> emails = new ArrayList<Email>();
+            HashMap<Integer, Email> emails = new HashMap<Integer, Email>();
 
-            for (Message message: mMessages)
+            for(int ii = 0; ii < mMessages.length; ii++)
             {
-                Email email = new Email(message);
+                Email email = new Email( mMessages[ii] );
 
                 if (unSeenOnly)
                 {
                     if (! email.seen())
                     {
-                        emails.add(email);
+                        emails.put(ii, email);
                     }
                 }
                 else                    // Since unSeenOnly is false all emails are sent through
                 {
-                    emails.add(email);
+                    emails.put(ii, email);
                 }
             }
 
@@ -271,23 +272,27 @@ public class Account
 
     public void delete(ArrayList<Email> emails)  // Delete emails with the specified ids
     {
-        Message[] messages = new Message[emails.size()];
-        try
+        if (emails.size() > 0)
         {
-            for (int ii = 0; ii < emails.size(); ii++)
+            Message[] messages = new Message[emails.size()];
+
+            try
             {
-                messages[ii] = emails.get(ii).message();
+                for (int ii = 0; ii < emails.size(); ii++)
+                {
+                    messages[ii] = emails.get(ii).message();
+                }
+
+                if (mTrash != null) { mInbox.copyMessages(messages, mTrash); }
+
+                if (! mUsesLabels)          // For Gmail-type accounts (that use Labels rather than folders) copying the message to Trash is enough to carry out deletion.
+                {
+                    mInbox.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
+                }
+
+                mInbox.expunge();           // Forces INBOX to actually delete the emails flagged for deletion
             }
-
-            if (mTrash != null) { mInbox.copyMessages(messages, mTrash); }
-
-            if (! mUsesLabels)          // For Gmail-type accounts (that use Labels rather than folders) copying the message to Trash is enough to carry out deletion.
-            {
-                mInbox.setFlags(messages, new Flags(Flags.Flag.DELETED), true);
-            }
-
-            mInbox.close(true);         // This will cause the emails marked for deletion to be actually deleted.
+            catch (MessagingException e) { Resources.Loge("Exception raised while attempting to delete emails.", e); }
         }
-        catch (MessagingException e) { Resources.Loge("Exception raised while attempting to delete emails.", e); }
     }
 }
