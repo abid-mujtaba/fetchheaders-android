@@ -2,6 +2,7 @@ package com.abid_mujtaba.fetchheaders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -23,6 +24,8 @@ public class MainActivity extends FragmentActivity
     private LinearLayout scrollList;
 
     private ArrayList<AccountFragment> mFragments = new ArrayList<AccountFragment>();      // Stores all fragments added to this activity
+
+    private Handler mHandler = new Handler();           // Handler used to carry out UI actions from background threads
 
 
     @Override
@@ -76,6 +79,11 @@ public class MainActivity extends FragmentActivity
                 refresh_fragments();
                 return true;
 
+            case R.id.menu_delete:
+
+                remove_deleted_emails();
+                return true;
+
             case R.id.menu_accounts:
 
                 startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountsActivity"));
@@ -108,7 +116,7 @@ public class MainActivity extends FragmentActivity
                 @Override
                 public void run()
                 {
-                    fragment.remove_emails_marked_for_deletion();
+                    fragment.remove_emails_marked_for_deletion(mHandler);       // We pass in a Handler to carry out UI actions on the background thread
                     counter.decrement();        // The counter is decremented
 
                     if (counter.value() == 0)           // If all fragments have been refreshed. The last fragment to refresh will cause the Activity to change
@@ -121,6 +129,24 @@ public class MainActivity extends FragmentActivity
             };
 
             ThreadPool.executeTask(refresh);
+        }
+    }
+
+
+    public void remove_deleted_emails()     // Method for removing emails marked for deletion from the UI
+    {
+        for (final AccountFragment fragment: mFragments)
+        {
+            Runnable delete = new Runnable() {
+
+                @Override
+                public void run()
+                {
+                    fragment.remove_emails_marked_for_deletion(mHandler);
+                }
+            };
+
+            ThreadPool.executeTask(delete);
         }
     }
 }

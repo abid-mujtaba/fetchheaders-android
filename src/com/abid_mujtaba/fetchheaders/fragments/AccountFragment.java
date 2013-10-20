@@ -33,6 +33,9 @@ public class AccountFragment extends Fragment
 {
     private Account mAccount;
     private ArrayList<Email> mEmails;
+    private ArrayList<EmailView> mEmailViews;         // Keeps track of the views associated with emails
+
+    private LinearLayout mEmailList;
 
     public static AccountFragment newInstance(int account_id)
     {
@@ -50,13 +53,13 @@ public class AccountFragment extends Fragment
         final View v = inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
 
         final TextView tvAccountName = (TextView) v.findViewById(R.id.tvAccountName);
-        final LinearLayout emailList = (LinearLayout) v.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
+        mEmailList = (LinearLayout) v.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
 
         tvAccountName.setText(mAccount.name());
 
         LayoutInflater li = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View pb = li.inflate(R.layout.progress_view, null);
-        emailList.addView(pb);
+        mEmailList.addView(pb);
 
         final Handler handler = new Handler();      // Create a handler to give access to the UI Thread in this fragment
 
@@ -74,14 +77,14 @@ public class AccountFragment extends Fragment
                 @Override
                 public void run()
                 {
-                    emailList.removeView(pb);
+                    mEmailList.removeView(pb);
 
                     // TODO: Create a custom layout for Error TextViews in general to be used in such cases. Possibly add a triangular icon indicating an error.
 
                     TextView tv = new TextView(getActivity());
                     tv.setText( mErrorMessage );
 
-                    emailList.addView(tv);
+                    mEmailList.addView(tv);
                 }
             }
 
@@ -91,6 +94,7 @@ public class AccountFragment extends Fragment
                 try
                 {
                     mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
+                    mEmailViews = new ArrayList<EmailView>();
 
                     if (mEmails.size() > 0)
                     {
@@ -99,7 +103,7 @@ public class AccountFragment extends Fragment
                             @Override
                             public void run()
                             {
-                                emailList.removeView(pb);
+                                mEmailList.removeView(pb);
 
                                 for (int ii = 0; ii < mEmails.size(); ii++)
                                 {
@@ -110,7 +114,8 @@ public class AccountFragment extends Fragment
                                     ev.setId(ii);
                                     ev.setOnClickListener(listener);
 
-                                    emailList.addView(ev);
+                                    mEmailList.addView(ev);
+                                    mEmailViews.add(ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
                                 }
                             }
                         });
@@ -166,14 +171,30 @@ public class AccountFragment extends Fragment
     };
 
 
-    public void remove_emails_marked_for_deletion()           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
+    public void remove_emails_marked_for_deletion(Handler handler)           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
     {
         // We iterate over the emails weeding out the emails marked for deletion
         ArrayList<Email> emails = new ArrayList<Email>();
 
-        for (Email email: mEmails)
+        for (int ii = 0; ii < mEmails.size(); ii++)
         {
-            if (email.isToBeDeleted()) { emails.add(email); }
+            Email email = mEmails.get(ii);
+
+            if (email.isToBeDeleted())
+            {
+                emails.add(email);
+
+                final EmailView email_view = mEmailViews.get(ii);
+
+                handler.post(new Runnable() {
+
+                    @Override
+                    public void run()
+                    {
+                        mEmailList.removeView( email_view );        // Remove the view associated with this email from the list of views
+                    }
+                });
+            }
         }
 
         mAccount.delete(emails);
