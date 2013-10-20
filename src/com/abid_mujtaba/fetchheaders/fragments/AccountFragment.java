@@ -179,12 +179,14 @@ public class AccountFragment extends Fragment
         for (int ii = 0; ii < mEmails.size(); ii++)
         {
             Email email = mEmails.get(ii);
+            mEmails.remove(ii);                 // Since we are deleting the email we remove it from the ArrayList
 
             if (email.isToBeDeleted())
             {
                 emails.add(email);
 
                 final EmailView email_view = mEmailViews.get(ii);
+                mEmailViews.remove(ii);         // Since we are deleting the email we remove the corresponding view from the ArrayList
 
                 handler.post(new Runnable() {
 

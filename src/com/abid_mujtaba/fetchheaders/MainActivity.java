@@ -8,12 +8,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.fragments.AccountFragment;
-import com.abid_mujtaba.fetchheaders.misc.Counter;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
 
@@ -35,9 +33,6 @@ public class MainActivity extends FragmentActivity
         setContentView(R.layout.main);
 
         scrollList = (LinearLayout) findViewById(R.id.scrollList);
-        TextView title = (TextView) findViewById(R.id.main_title);
-
-//        title.setOnClickListener(listener);
 
         if (Account.numberOfAccounts() > 0)             // Accounts have been specified
         {
@@ -76,7 +71,7 @@ public class MainActivity extends FragmentActivity
         {
             case R.id.menu_refresh:
 
-                refresh_fragments();
+                refresh();
                 return true;
 
             case R.id.menu_delete:
@@ -98,38 +93,11 @@ public class MainActivity extends FragmentActivity
     }
 
 
-    View.OnClickListener listener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) { refresh_fragments(); }
-    };
-
-
-    public void refresh_fragments()
+    public void refresh()           // Reloads the activity. Emails marked for deletion are NOT deleted.
     {
-        final Counter counter = new Counter(mFragments.size());         // Declare a counter to count down the fragments refreshing
-
-        for (final AccountFragment fragment: mFragments)
-        {
-            Runnable refresh = new Runnable() {
-
-                @Override
-                public void run()
-                {
-                    fragment.remove_emails_marked_for_deletion(mHandler);       // We pass in a Handler to carry out UI actions on the background thread
-                    counter.decrement();        // The counter is decremented
-
-                    if (counter.value() == 0)           // If all fragments have been refreshed. The last fragment to refresh will cause the Activity to change
-                    {
-                        Intent i = getIntent();     // We restart the MainActivity with the same intent it was started with. This causes emails to be fetched again. Emails deleted while issuing fragment.remove_emails_marked_for_deletion() will not appear.
-                        finish();
-                        startActivity(i);
-                    }
-                }
-            };
-
-            ThreadPool.executeTask(refresh);
-        }
+        Intent i = getIntent();     // We restart the MainActivity with the same intent it was started with. This causes emails to be fetched again. Emails deleted while issuing fragment.remove_emails_marked_for_deletion() will not appear.
+        finish();
+        startActivity(i);
     }
 
 
