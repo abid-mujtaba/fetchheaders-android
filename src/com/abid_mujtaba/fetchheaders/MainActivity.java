@@ -34,7 +34,7 @@ public class MainActivity extends FragmentActivity
         scrollList = (LinearLayout) findViewById(R.id.scrollList);
         TextView title = (TextView) findViewById(R.id.main_title);
 
-        title.setOnClickListener(listener);
+//        title.setOnClickListener(listener);
 
         if (Account.numberOfAccounts() > 0)             // Accounts have been specified
         {
@@ -71,6 +71,11 @@ public class MainActivity extends FragmentActivity
     {
         switch (item.getItemId())
         {
+            case R.id.menu_refresh:
+
+                refresh_fragments();
+                return true;
+
             case R.id.menu_accounts:
 
                 startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountsActivity"));
@@ -88,31 +93,34 @@ public class MainActivity extends FragmentActivity
     View.OnClickListener listener = new View.OnClickListener() {
 
         @Override
-        public void onClick(View view)
-        {
-            final Counter counter = new Counter(mFragments.size());         // Declare a counter to count down the fragments refreshing
-
-            for (final AccountFragment fragment: mFragments)
-            {
-                Runnable refresh = new Runnable() {
-
-                    @Override
-                    public void run()
-                    {
-                        fragment.refresh();
-                        counter.decrement();        // The counter is decremented
-
-                        if (counter.value() == 0)           // If all fragments have been refreshed. The last fragment to refresh will cause the Activity to change
-                        {
-                            Intent i = getIntent();     // We restart the MainActivity with the same intent it was started with. This causes emails to be fetched again. Emails deleted while issuing fragment.refresh() will not appear.
-                            finish();
-                            startActivity(i);
-                        }
-                    }
-                };
-
-                ThreadPool.executeTask(refresh);
-            }
-        }
+        public void onClick(View view) { refresh_fragments(); }
     };
+
+
+    public void refresh_fragments()
+    {
+        final Counter counter = new Counter(mFragments.size());         // Declare a counter to count down the fragments refreshing
+
+        for (final AccountFragment fragment: mFragments)
+        {
+            Runnable refresh = new Runnable() {
+
+                @Override
+                public void run()
+                {
+                    fragment.remove_emails_marked_for_deletion();
+                    counter.decrement();        // The counter is decremented
+
+                    if (counter.value() == 0)           // If all fragments have been refreshed. The last fragment to refresh will cause the Activity to change
+                    {
+                        Intent i = getIntent();     // We restart the MainActivity with the same intent it was started with. This causes emails to be fetched again. Emails deleted while issuing fragment.remove_emails_marked_for_deletion() will not appear.
+                        finish();
+                        startActivity(i);
+                    }
+                }
+            };
+
+            ThreadPool.executeTask(refresh);
+        }
+    }
 }

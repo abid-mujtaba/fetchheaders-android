@@ -166,7 +166,7 @@ public class AccountFragment extends Fragment
     };
 
 
-    public void refresh()           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
+    public void remove_emails_marked_for_deletion()           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
     {
         // We iterate over the emails weeding out the emails marked for deletion
         ArrayList<Email> emails = new ArrayList<Email>();
