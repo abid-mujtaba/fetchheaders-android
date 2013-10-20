@@ -202,8 +202,8 @@ public class Account
         Properties props = new Properties();
 
         props.setProperty("mail.store.protocol", "imaps");
-//        props.setProperty("mail.imaps.host", mHost);
-//        props.setProperty("mail.imaps.port", "993");
+        props.setProperty("mail.imaps.host", mHost);
+        props.setProperty("mail.imaps.port", "993");
         props.setProperty("mail.imaps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");          // Uses SSL to secure communication
         props.setProperty("mail.imaps.socketFactory.fallback", "false");
 
