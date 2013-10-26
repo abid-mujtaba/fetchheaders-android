@@ -36,6 +36,11 @@ public class AccountFragment extends Fragment
     private HashMap<Integer, EmailView> mEmailViews;         // Keeps track of the views associated with emails
 
     private LinearLayout mEmailList;
+    private View uProgress;                                  // View for indicating a progress while emails are being fetched
+    private View uRootView;
+    private TextView uAccountName;
+
+    private Handler mHandler;
 
     public static AccountFragment newInstance(int account_id)
     {
@@ -50,105 +55,104 @@ public class AccountFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        final View v = inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
+        uRootView = inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
 
         setRetainInstance(true);        // The Fragment will be retained across configuration changes.
 
-        final TextView tvAccountName = (TextView) v.findViewById(R.id.tvAccountName);
-        mEmailList = (LinearLayout) v.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
+        mHandler = new Handler();      // Create a handler to give access to the UI Thread in this fragment
 
-        tvAccountName.setText(mAccount.name());
+        uAccountName = (TextView) uRootView.findViewById(R.id.tvAccountName);
+        mEmailList = (LinearLayout) uRootView.findViewById(R.id.emailList);      // The root layout of the fragment. We shall add views to this.
+
+        uAccountName.setText(mAccount.name());
 
         LayoutInflater li = (LayoutInflater) this.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View pb = li.inflate(R.layout.progress_view, null);
-        mEmailList.addView(pb);
+        uProgress = li.inflate(R.layout.progress_view, null);
+        mEmailList.addView(uProgress);
 
-        final Handler handler = new Handler();      // Create a handler to give access to the UI Thread in this fragment
+        ThreadPool.executeTask(fetchEmails);        // Execute this runnable on a background thread, part of a pool
 
-        Runnable fetchEmails = new Runnable() {
+        return uRootView;
+    }
 
-            class ExceptionRunnable implements Runnable {       // The Runnable inner sub-class to be executed if an exception is raised
 
-                private String mErrorMessage = "";
+    private Runnable fetchEmails = new Runnable() {
 
-                public ExceptionRunnable(String error_message)      // The Runnable is declared with an error message
-                {
-                    mErrorMessage = error_message;
-                }
+        class ExceptionRunnable implements Runnable {       // The Runnable inner sub-class to be executed if an exception is raised
 
-                @Override
-                public void run()
-                {
-                    mEmailList.removeView(pb);
+            private String mErrorMessage = "";
 
-                    // TODO: Create a custom layout for Error TextViews in general to be used in such cases. Possibly add a triangular icon indicating an error.
-
-                    TextView tv = new TextView(getActivity());
-                    tv.setText( mErrorMessage );
-
-                    mEmailList.addView(tv);
-                }
+            public ExceptionRunnable(String error_message)      // The Runnable is declared with an error message
+            {
+                mErrorMessage = error_message;
             }
 
             @Override
             public void run()
             {
-                try
-                {
-                    mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
-                    mEmailViews = new HashMap<Integer, EmailView>();
+                mEmailList.removeView(uProgress);
 
-                    if (mEmails.size() > 0)
-                    {
-                        handler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
+                // TODO: Create a custom layout for Error TextViews in general to be used in such cases. Possibly add a triangular icon indicating an error.
 
-                            @Override
-                            public void run()
-                            {
-                                mEmailList.removeView(pb);
+                TextView tv = new TextView(getActivity());
+                tv.setText( mErrorMessage );
 
-                                for (Integer key: mEmails.keySet())             // We iterate over the key (unique int id) associated with the Email objects and in turn associate the EmailView Id and its position in its own HashMap with the same key for cross-referencing
-                                {
-                                    Email email = mEmails.get(key);
-
-                                    EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
-                                    ev.setInfo(email.date(), email.from(), email.subject());
-                                    ev.setId(key);
-                                    ev.setOnClickListener(listener);
-
-                                    mEmailList.addView(ev);
-                                    mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
-                                }
-                            }
-                        });
-                    }
-                    else        // No emails extracted so we remove the account from the list displayed
-                    {
-                        handler.post(new Runnable() {
-
-                            @Override
-                            public void run()
-                            {
-                                ((LinearLayout) v).removeView(tvAccountName);       // Remove account title
-
-                                ViewGroup.LayoutParams params = v.getLayoutParams();     // Collapse height of fragment layout to 0
-                                params.height = 0;
-                                v.setLayoutParams(params);
-                            }
-                        });
-                    }
-                }
-                catch(NoSuchProviderException e) { handler.post(new ExceptionRunnable("No Such Provider found. Verify credentials.")); }
-                catch(AuthenticationFailedException e) { handler.post(new ExceptionRunnable("Authentication Failure. Verify credentials.")); }
-                catch(MailConnectException e) { handler.post(new ExceptionRunnable("Unable to connect to Mail Server.")); }
-                catch(MessagingException e) { handler.post(new ExceptionRunnable("Messaging Error. Verify Credentials.")); }
+                mEmailList.addView(tv);
             }
-        };
+        }
 
-        ThreadPool.executeTask(fetchEmails);        // Execute this runnable on a background thread, part of a pool
+        @Override
+        public void run()
+        {
+            try
+            {
+                mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
+                mEmailViews = new HashMap<Integer, EmailView>();
 
-        return v;
-    }
+                if (mEmails.size() > 0)
+                {
+                    mHandler.post(new Runnable() {           // We define tasks that need to be carried out on the frontend UI thread. Most UI tasks.
+
+                        @Override
+                        public void run() {
+                            mEmailList.removeView(uProgress);
+
+                            for (Integer key : mEmails.keySet())             // We iterate over the key (unique int id) associated with the Email objects and in turn associate the EmailView Id and its position in its own HashMap with the same key for cross-referencing
+                            {
+                                Email email = mEmails.get(key);
+
+                                EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
+                                ev.setInfo(email.date(), email.from(), email.subject());
+                                ev.setId(key);
+                                ev.setOnClickListener(listener);
+
+                                mEmailList.addView(ev);
+                                mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
+                            }
+                        }
+                    });
+                }
+                else        // No emails extracted so we remove the account from the list displayed
+                {
+                    mHandler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            ((LinearLayout) uRootView).removeView(uAccountName);       // Remove account title
+
+                            ViewGroup.LayoutParams params = uRootView.getLayoutParams();     // Collapse height of fragment layout to 0
+                            params.height = 0;
+                            uRootView.setLayoutParams(params);
+                        }
+                    });
+                }
+            }
+            catch(NoSuchProviderException e) { mHandler.post(new ExceptionRunnable("No Such Provider found. Verify credentials.")); }
+            catch(AuthenticationFailedException e) { mHandler.post(new ExceptionRunnable("Authentication Failure. Verify credentials.")); }
+            catch(MailConnectException e) { mHandler.post(new ExceptionRunnable("Unable to connect to Mail Server.")); }
+            catch(MessagingException e) { mHandler.post(new ExceptionRunnable("Messaging Error. Verify Credentials.")); }
+        }
+    };
 
 
     View.OnClickListener listener = new View.OnClickListener() {

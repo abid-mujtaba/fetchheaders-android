@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity
             FragmentManager fM = getSupportFragmentManager();
             FragmentTransaction fT = fM.beginTransaction();
 
-            for (int ii = 0; ii < Account.numberOfAccounts(); ii++)
+            for (int ii = 0; ii < 1; ii++)//Account.numberOfAccounts(); ii++)
             {
                 String tag = "TAG_" + ii;           // This is the tag we will use to get a handle on the fragment in the FragmentManager
 
@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity
                     aF = AccountFragment.newInstance(ii);
 
                     fT.add(R.id.scrollList, aF, tag);       // Note: The addition to the scrollList only happens when aF == null, which happens when the persistent fragment has not been created yet
-                }                                           //       It is unclear how the scrollList still works when the screen is rotated and onCreate is run again
+                }                                           //       Since Views retain state across config changes the scrollList remembers that it has fragments added to it
 
                 mFragments.add(aF);
             }
