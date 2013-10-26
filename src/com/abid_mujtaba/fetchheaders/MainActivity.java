@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,17 +40,26 @@ public class MainActivity extends FragmentActivity
             TextView tvEmpty = (TextView) findViewById(R.id.txtNoAccounts);     // We start by removing the No Accounts view since accounts are present
             scrollList.removeView(tvEmpty);
 
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FragmentManager fM = getSupportFragmentManager();
+            FragmentTransaction fT = fM.beginTransaction();
 
             for (int ii = 0; ii < Account.numberOfAccounts(); ii++)
             {
-                AccountFragment aF = AccountFragment.newInstance(ii);       // We create a new account fragment and specify the number of the Account associated with it
-                ft.add(R.id.scrollList, aF);
+                String tag = "TAG_" + ii;           // This is the tag we will use to get a handle on the fragment in the FragmentManager
+
+                AccountFragment aF = (AccountFragment) fM.findFragmentByTag(tag);           // We attempt to access the fragment via the specified tag
+
+                if (aF == null)         // This indicates that the Fragment does not exist yet so we create it. It has setRetainInstance(true) so it persists across configuration changes.
+                {
+                    aF = AccountFragment.newInstance(ii);
+
+                    fT.add(R.id.scrollList, aF, tag);       // Note: The addition to the scrollList only happens when aF == null, which happens when the persistent fragment has not been created yet
+                }                                           //       It is unclear how the scrollList still works when the screen is rotated and onCreate is run again
 
                 mFragments.add(aF);
             }
 
-            ft.commit();
+            fT.commit();
         }
     }
 
