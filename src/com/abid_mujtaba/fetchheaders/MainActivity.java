@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity
             FragmentManager fM = getSupportFragmentManager();
             FragmentTransaction fT = fM.beginTransaction();
 
-            for (int ii = 0; ii < 1; ii++)//Account.numberOfAccounts(); ii++)
+            for (int ii = 0; ii < Account.numberOfAccounts(); ii++)
             {
                 String tag = "TAG_" + ii;           // This is the tag we will use to get a handle on the fragment in the FragmentManager
 
