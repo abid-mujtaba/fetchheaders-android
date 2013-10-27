@@ -169,6 +169,8 @@ public class AccountFragment extends Fragment
 
             mEmailList.addView(ev);
             mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
+
+            handleDeletion(email, ev);          // We handle strikethrough of EmailView if the email is marked for deletion.
         }
     }
 
@@ -204,16 +206,22 @@ public class AccountFragment extends Fragment
 
             email.toggleDeletion();
 
-            if (email.isToBeDeleted())
-            {
-                ev.strikethrough();
-            }
-            else
-            {
-                ev.removeStrikethrough();
-            }
+            handleDeletion(email, ev);
         }
     };
+
+
+    private void handleDeletion(Email email, EmailView ev)      // The method analyzes the Email object and its related EmailView and strikesthrough if so warranted
+    {
+        if (email.isToBeDeleted())
+        {
+            ev.strikethrough();
+        }
+        else
+        {
+            ev.removeStrikethrough();
+        }
+    }
 
 
     public void remove_emails_marked_for_deletion(Handler handler)           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
