@@ -21,10 +21,13 @@ import java.util.ArrayList;
 public class MainActivity extends FragmentActivity
 {
     private LinearLayout scrollList;
+    private Menu mMenu;                 // A handle to the Menu item
 
     private ArrayList<AccountFragment> mFragments = new ArrayList<AccountFragment>();      // Stores all fragments added to this activity
 
     private Handler mHandler = new Handler();           // Handler used to carry out UI actions from background threads
+
+    private boolean fShowSeen = false;                  // Flag which control whether seen emails should be displayed or not
 
 
     @Override
@@ -70,6 +73,8 @@ public class MainActivity extends FragmentActivity
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
 
+        mMenu = menu;       // Store a handle to the Menu item.
+
         return true;
     }
 
@@ -93,6 +98,20 @@ public class MainActivity extends FragmentActivity
 
                 startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountsActivity"));
                 finish();
+
+                return true;
+
+            case R.id.menu_show_seen:
+
+                fShowSeen = ! fShowSeen;
+
+                if (fShowSeen) { mMenu.findItem(R.id.menu_show_seen).setTitle("Hide Seen"); }       // Toggle Menu Item Title
+                else { mMenu.findItem(R.id.menu_show_seen).setTitle("Show Seen"); }
+
+                for (AccountFragment fragment: mFragments)
+                {
+                    fragment.showSeen(fShowSeen);
+                }
 
                 return true;
 

@@ -37,7 +37,7 @@ public class AccountFragment extends Fragment
 
     private LinearLayout mEmailList;
     private View uProgress;                                  // View for indicating a progress while emails are being fetched
-    private View uRootView;
+    private LinearLayout uRootView;
     private TextView uAccountName;
 
     private Handler mHandler;
@@ -60,7 +60,7 @@ public class AccountFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        uRootView = inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
+        uRootView = (LinearLayout) inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
 
         setRetainInstance(true);        // The Fragment will be retained across configuration changes.
 
@@ -177,22 +177,31 @@ public class AccountFragment extends Fragment
                 handleDeletion(email, ev);          // We handle strikethrough of EmailView if the email is marked for deletion.
             }
         }
+
+        if (mEmailList.getChildCount() == 0) { emptyRootView(); }       // No emails are being displayed so we remove the view.
     }
 
 
     private void emptyRootView()            // Empties out the RootView, which should only have the AccountName in it at the time this method is called
     {
-        ((LinearLayout) uRootView).removeView(uAccountName);       // Remove account title
+        uRootView.removeView(uAccountName);       // Remove account title
+        uRootView.removeView(mEmailList);
+    }
 
-        ViewGroup.LayoutParams params = uRootView.getLayoutParams();     // Collapse height of fragment layout to 0
-        params.height = 0;
-        uRootView.setLayoutParams(params);
+
+    private void refillRootView()
+    {
+        uRootView.addView(uAccountName);
+        uRootView.addView(mEmailList);
     }
 
 
     private void emptyEmailList()           // Method for removing all EmailViews from EmailList
     {
-        mEmailList.removeAllViewsInLayout();
+        for (int ii = mEmailList.getChildCount(); ii > 0; ii--)      // Iterate over view children in reverse order removing the last one first so that the getChild() index remains accurate
+        {
+            mEmailList.removeView( mEmailList.getChildAt(ii - 1) );
+        }
     }
 
 
@@ -276,5 +285,17 @@ public class AccountFragment extends Fragment
             });
 
         }
+    }
+
+
+    public void showSeen(boolean flag)
+    {
+        fShowSeen = flag;           // Set the Fragment level flag
+
+        emptyEmailList();       // Since "showSeen" state has changed we empty the EmailList and the RootView and populate it again.
+        emptyRootView();
+
+        refillRootView();
+        populateEmailViews();
     }
 }

@@ -266,17 +266,7 @@ public class Account
             {
                 Email email = new Email( mMessages[ii] );
 
-//                if (unSeenOnly)
-//                {
-//                    if (! email.seen())
-//                    {
-//                        emails.put(ii, email);
-//                    }
-//                }
-//                else                    // Since unSeenOnly is false all emails are sent through
-//                {
-                    emails.put(ii, email);
-//                }
+                emails.put(ii, email);
             }
 
             return emails;

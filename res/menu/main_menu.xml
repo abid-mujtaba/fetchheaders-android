@@ -16,4 +16,8 @@
         android:id="@+id/menu_accounts"
         android:title="Accounts"/>
 
+    <item
+        android:id="@+id/menu_show_seen"
+        android:title="Show Seen"/>
+
 </menu>
