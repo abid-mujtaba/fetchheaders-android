@@ -7,9 +7,6 @@ import com.abid_mujtaba.fetchheaders.Settings;
 
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.util.MailConnectException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.FetchProfile;
@@ -21,15 +18,19 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 
-
 import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Model representing an email account. It encapsulates the various methods which connect to an email account and interact with it
@@ -52,6 +53,7 @@ public class Account
     private Folder mTrash;              // Trash Folder on the email account
 
     private boolean mUsesLabels = false;        // This flag indicates that the email account uses Labels rather than Folders (Gmail being the most common example)
+    private int mMaxNumOfEmails = 10;           // Max number of emails fetched for any account
 
 
     private Account()        // Default empty constructor used to track objects
@@ -234,7 +236,24 @@ public class Account
                 }
             }
 
-            mMessages = mInbox.getMessages();
+            int num = mInbox.getMessageCount();       // Get number of messages in the Inbox
+
+            if (num > mMaxNumOfEmails)
+            {
+                Message[] msgs = mInbox.getMessages(num - mMaxNumOfEmails + 1, num);         // Fetch latest mMaxNumOfEmails emails (seen and unseen both). The oldest email is indexed as 1 and so on.
+
+                // Since the messages returned by the command above are in chronological order, older first we need to flip the order.
+                mMessages = new Message[msgs.length];
+
+                for (int ii = 0; ii < msgs.length; ii++)
+                {
+                    mMessages[ii] = msgs[ msgs.length - ii - 1 ];
+                }
+            }
+            else
+            {
+                mMessages = mInbox.getMessages();
+            }
 
             FetchProfile fp = new FetchProfile();
             fp.add(IMAPFolder.FetchProfileItem.HEADERS);        // Fetch header data
