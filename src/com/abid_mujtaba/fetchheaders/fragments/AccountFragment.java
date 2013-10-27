@@ -45,6 +45,7 @@ public class AccountFragment extends Fragment
     private String mErrorMessage;           // This is populated with the error message generated if an error occurs while fetching emails
 
     private boolean fEmailsFetched = false;     // A flag used to determine whether emails have been already fetched or not
+    private boolean fShowSeen = false;          // Flag indicates whether to show Seen emails or not.
 
     public static AccountFragment newInstance(int account_id)
     {
@@ -121,7 +122,7 @@ public class AccountFragment extends Fragment
         {
             try
             {
-                mEmails = mAccount.fetchEmails(true);       // Passing "true" here means only unseen emails will be returned
+                mEmails = mAccount.fetchEmails();       // Passing "true" here means only unseen emails will be returned
                 mEmailViews = new HashMap<Integer, EmailView>();
 
                 if (mEmails.size() > 0)
@@ -162,15 +163,19 @@ public class AccountFragment extends Fragment
         {
             Email email = mEmails.get(key);
 
-            EmailView ev = new EmailView(AccountFragment.this.getActivity(), null);
-            ev.setInfo(email.date(), email.from(), email.subject());
-            ev.setId(key);
-            ev.setOnClickListener(listener);
+            if (fShowSeen || ! email.seen())        // If fShowSeen flag is set all emails are added. If not add EmailView only if the emails is unseen
+            {
+                EmailView ev = new EmailView(AccountFragment.this.getActivity(), null, email.seen());       // We pass in the Seen, Unseen state to change the appearance of the view.
 
-            mEmailList.addView(ev);
-            mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
+                ev.setInfo(email.date(), email.from(), email.subject());
+                ev.setId(key);
+                ev.setOnClickListener(listener);
 
-            handleDeletion(email, ev);          // We handle strikethrough of EmailView if the email is marked for deletion.
+                mEmailList.addView(ev);
+                mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
+
+                handleDeletion(email, ev);          // We handle strikethrough of EmailView if the email is marked for deletion.
+            }
         }
     }
 
@@ -182,6 +187,12 @@ public class AccountFragment extends Fragment
         ViewGroup.LayoutParams params = uRootView.getLayoutParams();     // Collapse height of fragment layout to 0
         params.height = 0;
         uRootView.setLayoutParams(params);
+    }
+
+
+    private void emptyEmailList()           // Method for removing all EmailViews from EmailList
+    {
+        mEmailList.removeAllViewsInLayout();
     }
 
 

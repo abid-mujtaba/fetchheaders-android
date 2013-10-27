@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -200,7 +199,7 @@ public class Account
     }
 
 
-    public HashMap<Integer, Email> fetchEmails(boolean unSeenOnly) throws NoSuchProviderException, AuthenticationFailedException, MailConnectException, MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
+    public HashMap<Integer, Email> fetchEmails() throws NoSuchProviderException, AuthenticationFailedException, MailConnectException, MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
     {
         Properties props = new Properties();
 
@@ -267,17 +266,17 @@ public class Account
             {
                 Email email = new Email( mMessages[ii] );
 
-                if (unSeenOnly)
-                {
-                    if (! email.seen())
-                    {
-                        emails.put(ii, email);
-                    }
-                }
-                else                    // Since unSeenOnly is false all emails are sent through
-                {
+//                if (unSeenOnly)
+//                {
+//                    if (! email.seen())
+//                    {
+//                        emails.put(ii, email);
+//                    }
+//                }
+//                else                    // Since unSeenOnly is false all emails are sent through
+//                {
                     emails.put(ii, email);
-                }
+//                }
             }
 
             return emails;

@@ -5,6 +5,7 @@ package com.abid_mujtaba.fetchheaders.views;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -26,6 +27,21 @@ public class EmailView extends LinearLayout
         tvDate = (TextView) findViewById(R.id.tvDate);
         tvFrom = (TextView) findViewById(R.id.tvFrom);
         tvSubject = (TextView) findViewById(R.id.tvSubject);
+    }
+
+    public EmailView(Context context, AttributeSet attrs, boolean flag_seen)         // constructor for email view for seen and unseen emails
+    {
+        this(context, attrs);
+
+        if (flag_seen)
+        {
+            Resources resources = getResources();
+
+            tvDate.setTextColor( resources.getColor(R.color.seen) );
+            tvFrom.setTextColor( resources.getColor(R.color.seen) );
+            tvSubject.setTextColor( resources.getColor(R.color.seen) );
+        }
+
     }
 
     public void setInfo(String _date, String _from, String _subject)
