@@ -24,7 +24,7 @@ public class Email
     private boolean mToBeDeleted = false;
 
 
-    private static final SimpleDateFormat sDateFormat = new SimpleDateFormat("MMM d - h:m a");
+    private static final SimpleDateFormat sDateFormat = new SimpleDateFormat("MMM d - hh:mm a");
 
 
     public Email(Message message)   // An Email object is constructed as a wrapper around a Message object
