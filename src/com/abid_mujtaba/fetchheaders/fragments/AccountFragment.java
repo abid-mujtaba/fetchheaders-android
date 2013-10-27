@@ -256,5 +256,14 @@ public class AccountFragment extends Fragment
         mAccount.delete(emails);
 
         for (Integer key: keys) { mEmails.remove(key); }            // Remove the Email objects corresponding to the deleted emails from the HashMap
+
+        if (mEmails.size() == 0)        // If all of the emails have been deleted we should empty the root view
+        {
+            handler.post(new Runnable() {
+                @Override
+                public void run() { emptyRootView(); }
+            });
+
+        }
     }
 }
