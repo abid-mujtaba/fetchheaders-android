@@ -23,9 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -239,15 +237,7 @@ public class Account
 
             if (num > mMaxNumOfEmails)
             {
-                Message[] msgs = mInbox.getMessages(num - mMaxNumOfEmails + 1, num);         // Fetch latest mMaxNumOfEmails emails (seen and unseen both). The oldest email is indexed as 1 and so on.
-
-                // Since the messages returned by the command above are in chronological order, older first we need to flip the order.
-                mMessages = new Message[msgs.length];
-
-                for (int ii = 0; ii < msgs.length; ii++)
-                {
-                    mMessages[ii] = msgs[ msgs.length - ii - 1 ];
-                }
+                mMessages = mInbox.getMessages(num - mMaxNumOfEmails + 1, num);         // Fetch latest mMaxNumOfEmails emails (seen and unseen both). The oldest email is indexed as 1 and so on.
             }
             else
             {
@@ -259,6 +249,10 @@ public class Account
             fp.add(FetchProfile.Item.FLAGS);            // Fetch flags
 
             mInbox.fetch(mMessages, fp);
+
+            // Now that the messages have been fetched using the FetchProfile (that is the necessary information has been fetched with them) we sort the message in reverse chronological order
+
+            Arrays.sort(mMessages, new MessageComparator());        // The sort is accomplished using an instance of a custom comparator that compares messages using DateSent
 
             HashMap<Integer, Email> emails = new HashMap<Integer, Email>();
 
@@ -308,6 +302,22 @@ public class Account
         sNumOfInstances--;              // Update the count of num of instances
 
         writeAccountsToJson();          // Update the json file
+    }
+
+
+    private class MessageComparator implements Comparator<Message>          // Used to order Messages by date
+    {
+        @Override
+        public int compare(Message message, Message message2)
+        {
+            try
+            {
+                if (message.getSentDate().after(message2.getSentDate())) { return -1; }      // Return -1 if message is NEWER then message2 in terms of the SentDate. The -1 indicates that message < message2 (this gives reverse chronological order in Arrays.sort) since the sort order from lesser to greater
+
+                return 1;
+            }
+            catch (MessagingException e) { Resources.Loge("Error while comparing messages.", e); return -1; }
+        }
     }
 
 
