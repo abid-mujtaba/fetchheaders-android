@@ -199,7 +199,7 @@ public class Account
     }
 
 
-    public HashMap<Integer, Email> fetchEmails() throws NoSuchProviderException, AuthenticationFailedException, MailConnectException, MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
+    public HashMap<Integer, Email> fetchEmails() throws MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
     {
         Properties props = new Properties();
 
@@ -271,9 +271,6 @@ public class Account
 
             return emails;
         }
-        catch (NoSuchProviderException e) { Resources.Loge("Unable to get store from imapsession", e); throw e; }       // We log all of the possible exceptions and then re-throw them forcing the calling function to handle them - this includes using the UI to report errors to the user.
-        catch (AuthenticationFailedException e) { Resources.Loge("Authentication failure while connecting to: " + mHost, e); throw e; }
-        catch (MailConnectException e) { Resources.Loge("MailConnectException - Unable to connect to: " + mHost, e); throw e; }
         catch (MessagingException e) { Resources.Loge("Exception while attempting to connect to mail server", e); throw e; }         // The two above exceptions are caught by this one if they are not explicitly stated above.
     }
 
@@ -302,5 +299,27 @@ public class Account
             }
             catch (MessagingException e) { Resources.Loge("Exception raised while attempting to delete emails.", e); }
         }
+    }
+
+
+    public static void deleteAccount(int id)     // Method for deleting account (with the specified id) and updating the json file accordingly
+    {
+        sInstances.remove(id);          // Remove the specified Account object from the list
+        sNumOfInstances--;              // Update the count of num of instances
+
+        writeAccountsToJson();          // Update the json file
+    }
+
+
+    private static void printMessages(Message[] messages)           // Debugging method
+    {
+        try
+        {
+            for (Message message: messages)
+            {
+                Resources.Logd("" + message.getSentDate());
+            }
+        }
+        catch (MessagingException e) {}
     }
 }

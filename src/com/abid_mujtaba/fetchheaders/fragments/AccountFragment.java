@@ -20,11 +20,7 @@ import com.abid_mujtaba.fetchheaders.models.Account;
 import com.abid_mujtaba.fetchheaders.models.Email;
 import com.abid_mujtaba.fetchheaders.views.EmailView;
 
-import com.sun.mail.util.MailConnectException;
-
-import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -149,10 +145,7 @@ public class AccountFragment extends Fragment
 
                 fEmailsFetched = true;          // Emails have been fetched so we set this flag.
             }
-            catch(NoSuchProviderException e) { mHandler.post(new ExceptionRunnable("No Such Provider found. Verify credentials.")); }
-            catch(AuthenticationFailedException e) { mHandler.post(new ExceptionRunnable("Authentication Failure. Verify credentials.")); }
-            catch(MailConnectException e) { mHandler.post(new ExceptionRunnable("Unable to connect to Mail Server. Verify credentials.")); }
-            catch(MessagingException e) { mHandler.post(new ExceptionRunnable("Messaging Error. Verify credentials.")); }
+            catch(MessagingException e) { mHandler.post(new ExceptionRunnable("Error connecting. Verify credentials.")); }
         }
     };
 
@@ -211,6 +204,7 @@ public class AccountFragment extends Fragment
 
         TextView tv = new TextView(getActivity());
         tv.setText( error_message );
+        tv.setTextColor( getResources().getColor(R.color.red) );
 
         mEmailList.addView(tv);
     }

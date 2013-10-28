@@ -2,6 +2,7 @@
 <resources>
     <color name="white">#ffffff</color>
     <color name="grey">#777777</color>
+    <color name="red">#ff0000</color>
 
     <color name="seen">@color/grey</color>
 </resources>
