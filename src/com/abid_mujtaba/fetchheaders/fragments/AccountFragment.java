@@ -252,18 +252,6 @@ public class AccountFragment extends Fragment
             {
                 emails.add(email);
                 keys.add(key);
-
-                final EmailView email_view = mEmailViews.get(key);
-                mEmailViews.remove(key);         // Since we are deleting the email we remove the corresponding view from the ArrayList
-
-                handler.post(new Runnable() {
-
-                    @Override
-                    public void run()
-                    {
-                        mEmailList.removeView( email_view );        // Remove the view associated with this email from the list of views
-                    }
-                });
             }
         }
 
@@ -271,14 +259,10 @@ public class AccountFragment extends Fragment
 
         for (Integer key: keys) { mEmails.remove(key); }            // Remove the Email objects corresponding to the deleted emails from the HashMap
 
-        if (mEmails.size() == 0)        // If all of the emails have been deleted we should empty the root view
-        {
-            handler.post(new Runnable() {
-                @Override
-                public void run() { emptyRootView(); }
-            });
-
-        }
+        handler.post(new Runnable() {       // Since emails have been deleted we completely refresh the fragment view
+            @Override
+            public void run() { refreshFragmentView(); }
+        });
     }
 
 
@@ -286,6 +270,12 @@ public class AccountFragment extends Fragment
     {
         fShowSeen = flag;           // Set the Fragment level flag
 
+        refreshFragmentView();
+    }
+
+
+    private void refreshFragmentView()          // Completely removes all views and refills them based on mEmails
+    {
         emptyEmailList();       // Since "showSeen" state has changed we empty the EmailList and the RootView and populate it again.
         emptyRootView();
 
