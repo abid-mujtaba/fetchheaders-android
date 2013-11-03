@@ -14,9 +14,16 @@ import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.R;
 
+import com.caverock.androidsvg.SVGImageView;
+
+
 public class EmailView extends LinearLayout
 {
     private TextView tvDate, tvFrom, tvSubject;
+    private SVGImageView uIcon;
+
+    private boolean fSeen = false;
+
 
     public EmailView(Context context, AttributeSet attrs)
     {
@@ -27,6 +34,7 @@ public class EmailView extends LinearLayout
         tvDate = (TextView) findViewById(R.id.tvDate);
         tvFrom = (TextView) findViewById(R.id.tvFrom);
         tvSubject = (TextView) findViewById(R.id.tvSubject);
+        uIcon = (SVGImageView) findViewById(R.id.email_icon);
     }
 
     public EmailView(Context context, AttributeSet attrs, boolean flag_seen)         // constructor for email view for seen and unseen emails
@@ -40,6 +48,9 @@ public class EmailView extends LinearLayout
             tvDate.setTextColor( resources.getColor(R.color.seen) );
             tvFrom.setTextColor( resources.getColor(R.color.seen) );
             tvSubject.setTextColor( resources.getColor(R.color.seen) );
+            uIcon.setImageAsset("icons/email_seen.svg");        // Since the message is seen we set the email_seen icon
+
+            fSeen = true;       // A flag that indicates that the email has been seen.
         }
 
     }
@@ -56,6 +67,8 @@ public class EmailView extends LinearLayout
         tvSubject.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         tvDate.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         tvFrom.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        uIcon.setImageAsset("icons/trash_can.svg");
     }
 
     public void removeStrikethrough()          // Removes strike through of the subject since the email has been undeleted
@@ -63,5 +76,8 @@ public class EmailView extends LinearLayout
         tvSubject.setPaintFlags(tvSubject.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         tvDate.setPaintFlags(tvSubject.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         tvFrom.setPaintFlags(tvSubject.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+
+        if (fSeen) { uIcon.setImageAsset("icons/email_seen.svg"); }
+        else { uIcon.setImageAsset("icons/email_unseen.svg"); }
     }
 }

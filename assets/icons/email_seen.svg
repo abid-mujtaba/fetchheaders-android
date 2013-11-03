@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="24"
+   height="24"
+   id="svg3340"
+   sodipodi:version="0.32"
+   inkscape:version="0.48.3.1 r9886"
+   version="1.0"
+   sodipodi:docname="email_seen.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs3342">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective3348" />
+    <filter
+       inkscape:collect="always"
+       id="filter4285">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.1790625"
+         id="feGaussianBlur4287" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4293">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.2625385"
+         id="feGaussianBlur4295" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4297">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.43756416"
+         id="feGaussianBlur4299" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4317">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.087512834"
+         id="feGaussianBlur4319" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4321">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.087512834"
+         id="feGaussianBlur4323" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4325">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.087512834"
+         id="feGaussianBlur4327" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter4329">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.16501264"
+         id="feGaussianBlur4331" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="16"
+     inkscape:cx="1.0641532"
+     inkscape:cy="8.5114323"
+     inkscape:document-units="px"
+     inkscape:current-layer="g3953"
+     showgrid="false"
+     inkscape:snap-guide="true"
+     inkscape:window-width="1680"
+     inkscape:window-height="973"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3953"
+       transform="translate(3.45,-6.5500002)">
+      <g
+         id="g4333"
+         transform="translate(3.4006502,-3.0999999)"
+         inkscape:label="open envelope">
+        <g
+           transform="translate(10.099783,0.1000001)"
+           id="g4301"
+           inkscape:label="shadow">
+          <path
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4293)"
+             d="m -4.9504333,12.55 c -0.34,0 -8.6699997,6.86 -8.4999997,7 l 0,0.1875 0,4.8125 0,5.8125 c 0,0.1108 0.0767,0.1875 0.1875,0.1875 l 16.6249997,0 c 0.1108,0 0.1875,-0.0767 0.1875,-0.1875 l 0,-5.8125 0,-4.8125 0,-0.1875 c 0.17,-0.14 -8.16,-7 -8.5,-7 z"
+             id="path4203"
+             inkscape:connector-curvature="0" />
+          <path
+             id="path4173"
+             d="m -4.9504333,12.55 c -0.34,0 -8.6699997,6.86 -8.4999997,7 l 0,0.1875 0,4.8125 0,5.8125 c 0,0.1108 0.0767,0.1875 0.1875,0.1875 l 16.6249997,0 c 0.1108,0 0.1875,-0.0767 0.1875,-0.1875 l 0,-5.8125 0,-4.8125 0,-0.1875 c 0.17,-0.14 -8.16,-7 -8.5,-7 z"
+             style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4297)"
+             inkscape:connector-curvature="0" />
+        </g>
+        <path
+           transform="translate(-3.45,6.5500002)"
+           id="path4091"
+           d="M 8.5,6 C 8.16,6 -0.17,12.86 0,13 L 0,13.1875 0,18 0,23.8125 C 0,23.9233 0.0767,24 0.1875,24 l 16.625,0 C 16.9233,24 17,23.9233 17,23.8125 L 17,18 17,13.1875 17,13 C 17.17,12.86 8.84,6.0000001 8.5,6 z"
+           style="fill:#f5f6eb;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4325)"
+           inkscape:label="back"
+           inkscape:connector-curvature="0" />
+        <path
+           sodipodi:nodetypes="cccccccc"
+           style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4329)"
+           d="m -3.4002167,19.6 0,0.1875 3.9375,4.8125 9.0625,0 3.9999997,-4.8125 0,-0.1875 c -0.153045,-0.07652 -5.3103957,2.470309 -8.4999997,4.125 -3.1896037,-1.654691 -8.3469553,-4.201522 -8.5,-4.125 z"
+           id="path4221"
+           inkscape:label="front shadow"
+           inkscape:connector-curvature="0" />
+        <g
+           id="g4343"
+           inkscape:label="front">
+          <path
+             style="fill:#f5f6eb;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4321)"
+             d="M 0,13 0,13.1875 0,18 0,23.8125 c 0,0.07202 0.04063752,0.124744 0.09375,0.15625 C 0.4774908,23.920427 5.3883033,21.489275 8.5,19.875 c 3.111697,1.614275 8.022509,4.045427 8.40625,4.09375 C 16.959362,23.937243 17,23.88452 17,23.8125 L 17,18 17,13.1875 17,13 C 16.846955,12.923478 11.689604,15.470309 8.5,17.125 5.3103963,15.470309 0.15304467,12.923478 0,13 z"
+             id="path4159"
+             transform="translate(-3.45,6.5500002)"
+             inkscape:connector-curvature="0" />
+          <path
+             id="path4275"
+             d="m 5.1002833,23.600013 c -0.3319231,0 -8.2182938,6.496615 -8.4375,6.9375 l 8.4375,-1.625 c 0,0 8.4044747,1.658025 8.4374997,1.625 -0.219206,-0.440884 -8.1055763,-6.9375 -8.4374997,-6.9375 z"
+             style="opacity:0.75;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4285)"
+             sodipodi:nodetypes="ccccc"
+             inkscape:connector-curvature="0" />
+          <path
+             style="fill:#f5f6eb;fill-opacity:1;fill-rule:nonzero;stroke:none;filter:url(#filter4317)"
+             d="M 8.5,17 C 8.1680769,17 0.28170624,23.496615 0.0625,23.9375 0.095525,23.970525 0.1321,24 0.1875,24 l 16.625,0 c 0.0554,0 0.09198,-0.02948 0.125,-0.0625 C 16.718294,23.496616 8.8319234,17 8.5,17 z"
+             id="path4145"
+             transform="translate(-3.45,6.5500002)"
+             inkscape:connector-curvature="0" />
+        </g>
+      </g>
+    </g>
+  </g>
+  <metadata
+     id="metadata48">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Open Clip Art Library</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Open Envelope</dc:title>
+        <dc:date>2008-09-23T03:54:04</dc:date>
+        <dc:description>An open envelope with nothing in it.\nMade in Inkscape.  24x24, but scales nicely.</dc:description>
+        <dc:source>http://openclipart.org/detail/19342/open-envelope-by-llubnek-19342</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>LlubNek</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>email</rdf:li>
+            <rdf:li>email</rdf:li>
+            <rdf:li>envelope</rdf:li>
+            <rdf:li>envelope</rdf:li>
+            <rdf:li>icon</rdf:li>
+            <rdf:li>icon</rdf:li>
+            <rdf:li>image</rdf:li>
+            <rdf:li>mail</rdf:li>
+            <rdf:li>mail</rdf:li>
+            <rdf:li>media</rdf:li>
+            <rdf:li>png</rdf:li>
+            <rdf:li>public domain</rdf:li>
+            <rdf:li>svg</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
