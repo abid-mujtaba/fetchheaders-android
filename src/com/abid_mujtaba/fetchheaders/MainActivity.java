@@ -29,12 +29,19 @@ public class MainActivity extends FragmentActivity
 
     private boolean fShowSeen = false;                  // Flag which control whether seen emails should be displayed or not
 
+    private String BUNDLE_FLAG_SHOW_SEEN = "BUNDLE_FLAG_SHOW_SEEN";     // Used as a key for the showSeen flag stored in the Bundle that saves state information when the activity is restarted (possibly because of screen rotation)
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        if (savedInstanceState != null)     // If the passed in state information bundle is non-empty we expect it to contain the saved value of fShowSeen. We also pass in a default value.
+        {
+            fShowSeen = savedInstanceState.getBoolean(BUNDLE_FLAG_SHOW_SEEN, false);
+        }
 
         scrollList = (LinearLayout) findViewById(R.id.scrollList);
 
@@ -74,6 +81,9 @@ public class MainActivity extends FragmentActivity
         menuInflater.inflate(R.menu.main_menu, menu);
 
         mMenu = menu;       // Store a handle to the Menu item.
+
+        if (fShowSeen) { mMenu.findItem(R.id.menu_show_seen).setTitle("Hide Seen"); }       // Set Menu Item Title based on fShowSeen.
+        else { mMenu.findItem(R.id.menu_show_seen).setTitle("Show Seen"); }                 // Since this method is called every time the activity is recreated (including when the screen is rotated we check fShowSeen and then set the menu item title
 
         return true;
     }
@@ -121,6 +131,14 @@ public class MainActivity extends FragmentActivity
         }
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(BUNDLE_FLAG_SHOW_SEEN, fShowSeen);
+    }
 
     public void refresh()           // Reloads the activity. Emails marked for deletion are NOT deleted.
     {
