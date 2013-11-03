@@ -12,13 +12,15 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import com.abid_mujtaba.fetchheaders.fragments.AccountFragment;
+import com.abid_mujtaba.fetchheaders.interfaces.ToggleMenu;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
 
 import java.util.ArrayList;
 
-public class MainActivity extends FragmentActivity
+public class MainActivity extends FragmentActivity implements ToggleMenu
 {
     private LinearLayout scrollList;
     private Menu mMenu;                 // A handle to the Menu item
@@ -28,6 +30,7 @@ public class MainActivity extends FragmentActivity
     private Handler mHandler = new Handler();           // Handler used to carry out UI actions from background threads
 
     private boolean fShowSeen = false;                  // Flag which control whether seen emails should be displayed or not
+    private boolean fDisableMenu = false;               // A flag that indicates whether the menu should be disabled or not. We want the menu disabled when we are performing certain tasks such as fetching emails
 
     private String BUNDLE_FLAG_SHOW_SEEN = "BUNDLE_FLAG_SHOW_SEEN";     // Used as a key for the showSeen flag stored in the Bundle that saves state information when the activity is restarted (possibly because of screen rotation)
 
@@ -86,6 +89,34 @@ public class MainActivity extends FragmentActivity
         else { mMenu.findItem(R.id.menu_show_seen).setTitle("Show Seen"); }                 // Since this method is called every time the activity is recreated (including when the screen is rotated we check fShowSeen and then set the menu item title
 
         return true;
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        if (fDisableMenu) { Toast.makeText(this, "Waiting ...", Toast.LENGTH_SHORT).show(); }       // The menu is disabled and we apprise the user of this.
+
+        return ! fDisableMenu;              // Basically decide whether pressing the menu actually shows any items based on the fDisableMenu flag.
+    }
+
+
+    private int toggleMenuCount = 0;        // This integer is used to count the number of fragments who have asked to disable the menu. When this count is zero the menu is enabled.
+
+    public void enableMenu()
+    {
+        if (--toggleMenuCount == 0)         // We predecrement the count of requests to disable the menu. If the count falls to zero we change the flag.
+        {
+            fDisableMenu = false;
+        }
+    }
+
+
+    public void disableMenu()
+    {
+        fDisableMenu = true;        // Set the Disable Menu flag
+
+        toggleMenuCount++;          // Increment the count to show that one more entity has asked for the menu to be disabled
     }
 
 

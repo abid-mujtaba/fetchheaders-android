@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.R;
+import com.abid_mujtaba.fetchheaders.interfaces.ToggleMenu;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
 import com.abid_mujtaba.fetchheaders.models.Email;
@@ -35,6 +36,8 @@ public class AccountFragment extends Fragment
     private View uProgress;                                  // View for indicating a progress while emails are being fetched
     private LinearLayout uRootView;
     private TextView uAccountName;
+
+    private ToggleMenu mToggleMenu;
 
     private Handler mHandler;
 
@@ -59,6 +62,8 @@ public class AccountFragment extends Fragment
         uRootView = (LinearLayout) inflater.inflate(R.layout.account_fragment, container, false);     // The false specifies that this view is NOT to be attached to root since we will attach it explicitly
 
         setRetainInstance(true);        // The Fragment will be retained across configuration changes.
+
+        mToggleMenu = (ToggleMenu) getActivity();           // We get the parent activity cast as the ToggleMenu interface so we can toggle the menu as required
 
         mHandler = new Handler();      // Create a handler to give access to the UI Thread in this fragment
 
@@ -118,6 +123,8 @@ public class AccountFragment extends Fragment
         {
             try
             {
+                mToggleMenu.disableMenu();          // Tell the parent activity to disable the menu while we are fetching emails
+
                 mEmails = mAccount.fetchEmails();       // Passing "true" here means only unseen emails will be returned
                 mEmailViews = new HashMap<Integer, EmailView>();
 
@@ -144,6 +151,8 @@ public class AccountFragment extends Fragment
                 }
 
                 fEmailsFetched = true;          // Emails have been fetched so we set this flag.
+
+                mToggleMenu.enableMenu();       // As far as this fragment is concerned the menu can be re-enabled.
             }
             catch(MessagingException e) { mHandler.post(new ExceptionRunnable("Error connecting. Verify credentials.")); }
         }
