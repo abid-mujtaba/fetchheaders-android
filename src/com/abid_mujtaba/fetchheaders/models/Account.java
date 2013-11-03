@@ -2,6 +2,7 @@ package com.abid_mujtaba.fetchheaders.models;
 
 import android.util.Log;
 
+import android.util.SparseArray;
 import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.Settings;
 
@@ -197,7 +198,7 @@ public class Account
     }
 
 
-    public HashMap<Integer, Email> fetchEmails() throws MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
+    public SparseArray<Email> fetchEmails() throws MessagingException      // Fetches messages from account and uses them to create an array of Email objects. Catches connection exception and re-throws them up the chain.
     {
         Properties props = new Properties();
 
@@ -254,7 +255,7 @@ public class Account
 
             Arrays.sort(mMessages, new MessageComparator());        // The sort is accomplished using an instance of a custom comparator that compares messages using DateSent
 
-            HashMap<Integer, Email> emails = new HashMap<Integer, Email>();
+            SparseArray<Email> emails = new SparseArray<Email>();
 
             for(int ii = 0; ii < mMessages.length; ii++)
             {

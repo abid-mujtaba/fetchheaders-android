@@ -6,8 +6,10 @@ package com.abid_mujtaba.fetchheaders.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.R;
+import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.interfaces.ToggleMenu;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
@@ -29,8 +32,8 @@ import java.util.HashMap;
 public class AccountFragment extends Fragment
 {
     private Account mAccount;
-    private HashMap<Integer, Email> mEmails;                 // We use HashMaps so we can delete emails with impunity yet still have access to remaining emails with the same integer index
-    private HashMap<Integer, EmailView> mEmailViews;         // Keeps track of the views associated with emails
+    private SparseArray<Email> mEmails;                 // We use HashMaps so we can delete emails with impunity yet still have access to remaining emails with the same integer index
+    private SparseArray<EmailView> mEmailViews;         // Keeps track of the views associated with emails
 
     private LinearLayout mEmailList;
     private View uProgress;                                  // View for indicating a progress while emails are being fetched
@@ -53,6 +56,12 @@ public class AccountFragment extends Fragment
         af.mAccount = Account.get(account_id);          // Associate account with Fragment using account_id
 
         return af;
+    }
+
+
+    public String accountName()         // Method for getting the name of the account associated with this fragment
+    {
+        return mAccount.name();
     }
 
 
@@ -126,7 +135,7 @@ public class AccountFragment extends Fragment
                 mToggleMenu.disableMenu();          // Tell the parent activity to disable the menu while we are fetching emails
 
                 mEmails = mAccount.fetchEmails();       // Passing "true" here means only unseen emails will be returned
-                mEmailViews = new HashMap<Integer, EmailView>();
+                mEmailViews = new SparseArray<EmailView>();
 
                 if (mEmails.size() > 0)
                 {
@@ -161,8 +170,11 @@ public class AccountFragment extends Fragment
 
     private void populateEmailViews()           // Method for taking mEmails and using it to populate mEmailList with EmailViews corresponding to the fetched emails
     {
-        for (Integer key : mEmails.keySet())             // We iterate over the key (unique int id) associated with the Email objects and in turn associate the EmailView Id and its position in its own HashMap with the same key for cross-referencing
+        // We iterate over the key (unique int id) associated with the Email objects and in turn associate the EmailView Id and its position in its own SparseArray with the same key for cross-referencing
+        for (int ii = 0; ii < mEmails.size(); ii++)
         {
+            Integer key = mEmails.keyAt(ii);
+
             Email email = mEmails.get(key);
 
             if (fShowSeen || ! email.seen())        // If fShowSeen flag is set all emails are added. If not add EmailView only if the emails is unseen
@@ -253,8 +265,10 @@ public class AccountFragment extends Fragment
         ArrayList<Email> emails = new ArrayList<Email>();
         ArrayList<Integer> keys = new ArrayList<Integer>();     // We store the keys that we have to delete from the HashMap. We can't do it while we are traversing the key set itself
 
-        for(Integer key: mEmails.keySet())              // We iterate over the keys in the HashMap. This way we know that we are iterating over existing objects and have access to their unique keys
+        for(int ii = 0; ii < mEmails.size(); ii++)              // We iterate over the keys in the HashMap. This way we know that we are iterating over existing objects and have access to their unique keys
         {
+            Integer key = mEmails.keyAt(ii);
+
             Email email = mEmails.get(key);
 
             if (email.isToBeDeleted())
