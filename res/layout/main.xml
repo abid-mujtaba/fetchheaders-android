@@ -8,7 +8,7 @@
 
     <com.caverock.androidsvg.SVGImageView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="100dp"
         android:padding="10dp"
         android:gravity="center"
         svg:svg="icons/title.svg"/>
