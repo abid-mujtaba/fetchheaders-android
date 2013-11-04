@@ -6,7 +6,9 @@ package com.abid_mujtaba.fetchheaders;
 
 
 import android.app.Application;
+
 import com.abid_mujtaba.fetchheaders.models.Account;
+import com.abid_mujtaba.fetchheaders.views.SVG;
 
 
 public class FetchheadersApplication extends Application
@@ -20,5 +22,8 @@ public class FetchheadersApplication extends Application
 
         // Set up Account objects based on the accounts.json file
         Account.createAccountsFromJson();
+
+        // Cache svg email icon drawables
+        SVG.cacheSVGDrawables(this);
     }
 }

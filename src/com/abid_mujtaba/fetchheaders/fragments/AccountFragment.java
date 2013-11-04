@@ -6,7 +6,6 @@ package com.abid_mujtaba.fetchheaders.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
@@ -17,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.R;
-import com.abid_mujtaba.fetchheaders.Resources;
 import com.abid_mujtaba.fetchheaders.interfaces.ToggleMenu;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
@@ -26,7 +24,6 @@ import com.abid_mujtaba.fetchheaders.views.EmailView;
 
 import javax.mail.MessagingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class AccountFragment extends Fragment

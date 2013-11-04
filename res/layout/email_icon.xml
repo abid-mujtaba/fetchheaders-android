@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.caverock.androidsvg.SVGImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/email_icon"
+    android:layout_width="@dimen/email_icon_width"
+    android:layout_height="match_parent"
+    android:scaleType="fitCenter"
+    android:paddingBottom="3dp"
+    android:paddingRight="4dp"/>
