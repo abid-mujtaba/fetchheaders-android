@@ -30,7 +30,7 @@
                 android:gravity="center"
                 android:layout_marginTop="200dp"
                 android:textSize="14sp"
-                android:text="No Accounts. Press Menu to add."/>
+                android:text="@string/no_accounts"/>
 
         </LinearLayout>
 

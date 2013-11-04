@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"
         android:textSize="18sp"
-        android:text="Account Settings"/>
+        android:text="@string/account_settings"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="Name: "/>
+                android:text="@string/name"/>
 
             <EditText
                 android:id="@+id/account_name"
@@ -45,7 +45,7 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="Host: "/>
+                android:text="@string/host"/>
 
             <EditText
                 android:id="@+id/account_host"
@@ -63,7 +63,7 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="Username: "/>
+                android:text="@string/username"/>
 
             <EditText
                 android:id="@+id/account_username"
@@ -81,7 +81,7 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="Password: "/>
+                android:text="@string/password"/>
 
             <EditText
                 android:id="@+id/account_password"
@@ -103,14 +103,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Save"/>
+            android:text="@string/save"/>
 
         <Button
             android:id="@+id/btnCancel"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Cancel"/>
+            android:text="@string/cancel"/>
 
     </LinearLayout>
 

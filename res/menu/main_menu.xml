@@ -6,18 +6,18 @@
 
     <item
         android:id="@+id/menu_refresh"
-        android:title="Refresh"/>
+        android:title="@string/refresh"/>
 
     <item
         android:id="@+id/menu_delete"
-        android:title="Delete Emails"/>
+        android:title="@string/delete_emails"/>
 
     <item
         android:id="@+id/menu_accounts"
-        android:title="Accounts"/>
+        android:title="@string/accounts"/>
 
     <item
         android:id="@+id/menu_show_seen"
-        android:title="Show Seen"/>
+        android:title="@string/show_seen"/>
 
 </menu>
