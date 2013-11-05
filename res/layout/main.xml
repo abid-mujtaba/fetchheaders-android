@@ -3,8 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:svg="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <com.caverock.androidsvg.SVGImageView
         android:layout_width="match_parent"
@@ -13,28 +13,40 @@
         android:gravity="center"
         svg:svg="icons/title.svg"/>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/scrollList"
+        <com.caverock.androidsvg.SVGImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:padding="50dp"
+            svg:svg="icons/icon.svg"/>
 
-            <TextView
-                android:id="@+id/txtNoAccounts"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/scrollList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="200dp"
-                android:textSize="14sp"
-                android:text="@string/no_accounts"/>
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/txtNoAccounts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="200dp"
+                    android:textSize="14sp"
+                    android:text="@string/no_accounts"/>
 
-    </ScrollView>
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
 
 </LinearLayout>
 
