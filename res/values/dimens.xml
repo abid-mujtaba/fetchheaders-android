@@ -2,5 +2,6 @@
 <resources>
 
     <dimen name="email_icon_width">40dp</dimen>
+    <dimen name="progressbar_length">20dp</dimen>
 
 </resources>
