@@ -1,117 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:svg="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:textSize="18sp"
-        android:text="@string/account_settings"/>
-
-    <LinearLayout
+    <com.caverock.androidsvg.SVGImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:padding="50dp"
+        android:layout_gravity="center"
+        svg:svg="icons/icon.svg"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="@string/name"/>
-
-            <EditText
-                android:id="@+id/account_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="@string/host"/>
-
-            <EditText
-                android:id="@+id/account_host"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="@string/username"/>
-
-            <EditText
-                android:id="@+id/account_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="@string/password"/>
-
-            <EditText
-                android:id="@+id/account_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_height="match_parent"
+        android:background="@color/translucent"/>
 
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+    <RelativeLayout
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+
+        <TextView
             android:layout_height="wrap_content"
-            android:text="@string/save"/>
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"
+            android:textSize="18sp"
+            android:text="@string/account_settings"/>
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"/>
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <LinearLayout style="@style/Setting_block">
 
-</RelativeLayout>
+                <TextView
+                    style="@style/Setting_txt"
+                    android:text="@string/name"/>
+
+                <EditText
+                    android:id="@+id/account_name"
+                    style="@style/Setting_edt"/>
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/Setting_block">
+
+                <TextView
+                    style="@style/Setting_txt"
+                    android:text="@string/host"/>
+
+                <EditText
+                    android:id="@+id/account_host"
+                    style="@style/Setting_edt"/>
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/Setting_block">
+
+                <TextView
+                    style="@style/Setting_txt"
+                    android:text="@string/username"/>
+
+                <EditText
+                    android:id="@+id/account_username"
+                    style="@style/Setting_edt"/>
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/Setting_block">
+
+                <TextView
+                    style="@style/Setting_txt"
+                    android:text="@string/password"/>
+
+                <EditText
+                    android:id="@+id/account_password"
+                    style="@style/Setting_edt"
+                    android:inputType="textPassword"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/btnSave"
+                style="@style/Setting_btn"
+                android:text="@string/save"/>
+
+            <Button
+                android:id="@+id/btnCancel"
+                style="@style/Setting_btn"
+                android:text="@string/cancel"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

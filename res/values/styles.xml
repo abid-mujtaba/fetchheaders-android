@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Setting_block">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="Setting_txt">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Setting_edt">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="Setting_btn">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+</resources>
