@@ -11,7 +11,8 @@
         android:layout_height="100dp"
         android:padding="10dp"
         android:gravity="center"
-        svg:svg="icons/title.svg"/>
+        svg:asset="icons/title.svg"
+        svg:cache="true"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -21,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="50dp"
-            svg:svg="icons/icon.svg"/>
+            svg:asset="icons/icon.svg"
+            svg:cache="true"/>
 
         <ScrollView
             android:layout_width="match_parent"

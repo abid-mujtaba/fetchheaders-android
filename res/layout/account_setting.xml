@@ -11,7 +11,8 @@
         android:layout_height="match_parent"
         android:padding="50dp"
         android:layout_gravity="center"
-        svg:svg="icons/icon.svg"/>
+        svg:asset="icons/icon.svg"
+        svg:cache="true"/>
 
     <View
         android:layout_width="match_parent"
