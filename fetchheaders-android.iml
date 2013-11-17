@@ -17,7 +17,15 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.sun.mail:javax.mail:1.5.0" level="project" />
     <orderEntry type="module" module-name="AndroidSVG" />
-    <orderEntry type="module" module-name="AppCompat" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/applications/android-sdk-linux/extras/android/support/v4/android-support-v4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
