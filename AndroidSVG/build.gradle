@@ -1,0 +1,35 @@
+buildscript
+        {
+            repositories
+                    {
+                        mavenCentral()
+                    }
+
+            dependencies
+                    {
+                        classpath 'com.android.tools.build:gradle:0.5.+'
+                    }
+        }
+
+apply plugin: 'android-library'             // The ONLY and CRUCIAL difference is that we use the 'android-library' plugin to declare that this is to be compiled as library project.
+                                            // This ensures that the resources are folded in to the project that includes this library project
+
+android
+    {
+        compileSdkVersion 10
+        buildToolsVersion "19.0.0"
+
+        sourceSets
+                {
+                    main
+                            {
+                                manifest.srcFile 'AndroidManifest.xml'
+                                java.srcDirs = ['src']
+                                resources.srcDirs = ['src']
+                                aidl.srcDirs = ['src']
+                                renderscript.srcDirs = ['src']
+                                res.srcDirs = ['res']
+                                assets.srcDirs = ['assets']
+                            }
+                }
+    }

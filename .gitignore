@@ -29,3 +29,7 @@ src/com/abid_mujtaba/fetchheaders/workspace/*.jar
 
 # Compiled 'out' folder
 out/
+
+# Gradle files
+.gradle
+build/

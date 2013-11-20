@@ -1,0 +1,1 @@
+include ':AndroidSVG'           // Necessary to declare library projects in this file
