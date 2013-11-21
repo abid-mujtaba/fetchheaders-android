@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class AccountFragment extends Fragment
 {
     private Account mAccount;
-    private SparseArray<Email> mEmails;                 // We use HashMaps so we can delete emails with impunity yet still have access to remaining emails with the same integer index
+    private SparseArray<Email> mEmails;                 // We use SparseArray so we can delete emails with impunity yet still have access to remaining emails with the same integer index
     private SparseArray<EmailView> mEmailViews;         // Keeps track of the views associated with emails
 
     private LinearLayout mEmailList;
@@ -45,6 +45,9 @@ public class AccountFragment extends Fragment
 
     private boolean fEmailsFetched = false;     // A flag used to determine whether emails have been already fetched or not
     private boolean fShowSeen = false;          // Flag indicates whether to show Seen emails or not.
+
+    private String ERROR_MESSAGE = "\"Error connecting. Verify credentials.\"";     // The error message displayed when connection to the server fails.
+
 
     public static AccountFragment newInstance(int account_id)
     {
@@ -157,39 +160,43 @@ public class AccountFragment extends Fragment
                 }
 
                 fEmailsFetched = true;          // Emails have been fetched so we set this flag.
-
-                mToggleMenu.enableMenu();       // As far as this fragment is concerned the menu can be re-enabled.
             }
-            catch(MessagingException e) { mHandler.post(new ExceptionRunnable("Error connecting. Verify credentials.")); }
+            catch(MessagingException e) { mHandler.post(new ExceptionRunnable( ERROR_MESSAGE )); }
+
+            mToggleMenu.enableMenu();       // As far as this fragment is concerned the menu can be re-enabled (even if an Exception has occurred)
         }
     };
 
 
     private void populateEmailViews()           // Method for taking mEmails and using it to populate mEmailList with EmailViews corresponding to the fetched emails
     {
-        // We iterate over the key (unique int id) associated with the Email objects and in turn associate the EmailView Id and its position in its own SparseArray with the same key for cross-referencing
-        for (int ii = 0; ii < mEmails.size(); ii++)
+        if (mEmails != null)            // check if a mail server connection has failed in which case mEmails is null
         {
-            Integer key = mEmails.keyAt(ii);
-
-            Email email = mEmails.get(key);
-
-            if (fShowSeen || ! email.seen())        // If fShowSeen flag is set all emails are added. If not add EmailView only if the emails is unseen
+            // We iterate over the key (unique int id) associated with the Email objects and in turn associate the EmailView Id and its position in its own SparseArray with the same key for cross-referencing
+            for (int ii = 0; ii < mEmails.size(); ii++)
             {
-                EmailView ev = new EmailView(AccountFragment.this.getActivity(), null, email.seen());       // We pass in the Seen, Unseen state to change the appearance of the view.
+                Integer key = mEmails.keyAt(ii);
 
-                ev.setInfo(email.date(), email.from(), email.subject());
-                ev.setId(key);
-                ev.setOnClickListener(listener);
+                Email email = mEmails.get(key);
 
-                mEmailList.addView(ev);
-                mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
+                if (fShowSeen || ! email.seen())        // If fShowSeen flag is set all emails are added. If not add EmailView only if the emails is unseen
+                {
+                    EmailView ev = new EmailView(AccountFragment.this.getActivity(), null, email.seen());       // We pass in the Seen, Unseen state to change the appearance of the view.
 
-                handleDeletion(email, ev);          // We handle strikethrough of EmailView if the email is marked for deletion.
+                    ev.setInfo(email.date(), email.from(), email.subject());
+                    ev.setId(key);
+                    ev.setOnClickListener(listener);
+
+                    mEmailList.addView(ev);
+                    mEmailViews.put(key, ev);        // We store the EmailView associated with this Email object. We will use it to delete views when required
+
+                    handleDeletion(email, ev);          // We handle strikethrough of EmailView if the email is marked for deletion.
+                }
             }
-        }
 
-        if (mEmailList.getChildCount() == 0) { emptyRootView(); }       // No emails are being displayed so we remove the view.
+            if (mEmailList.getChildCount() == 0) { emptyRootView(); }       // No emails are being displayed so we remove the view.
+        }
+        else { setErrorView(mErrorMessage); }       // Since mEmails == null this means an error occurred in connecting to the mail server so we display the error view
     }
 
 
@@ -258,31 +265,34 @@ public class AccountFragment extends Fragment
 
     public void remove_emails_marked_for_deletion(Handler handler)           // Called by parent activity to force the fragment to refresh its contents. This will cause emails set for deletions to be deleted.
     {
-        // We iterate over the emails weeding out the emails marked for deletion
-        ArrayList<Email> emails = new ArrayList<Email>();
-        ArrayList<Integer> keys = new ArrayList<Integer>();     // We store the keys that we have to delete from the HashMap. We can't do it while we are traversing the key set itself
-
-        for(int ii = 0; ii < mEmails.size(); ii++)              // We iterate over the keys in the HashMap. This way we know that we are iterating over existing objects and have access to their unique keys
+        if (mEmails != null)        // If an error occurs while connecting to an account mEmails == null in which case there cannot be any emails to delete so we skip the entire functionality
         {
-            Integer key = mEmails.keyAt(ii);
+            // We iterate over the emails weeding out the emails marked for deletion
+            ArrayList<Email> emails = new ArrayList<Email>();
+            ArrayList<Integer> keys = new ArrayList<Integer>();     // We store the keys that we have to delete from the HashMap. We can't do it while we are traversing the key set itself
 
-            Email email = mEmails.get(key);
-
-            if (email.isToBeDeleted())
+            for(int ii = 0; ii < mEmails.size(); ii++)              // We iterate over the keys in the SparseArray. This way we know that we are iterating over existing objects and have access to their unique keys
             {
-                emails.add(email);
-                keys.add(key);
+                Integer key = mEmails.keyAt(ii);
+
+                Email email = mEmails.get(key);
+
+                if (email.isToBeDeleted())
+                {
+                    emails.add(email);
+                    keys.add(key);
+                }
             }
-        }
 
-        mAccount.delete(emails);
+            mAccount.delete(emails);
 
-        for (Integer key: keys) { mEmails.remove(key); }            // Remove the Email objects corresponding to the deleted emails from the HashMap
+            for (Integer key: keys) { mEmails.remove(key); }            // Remove the Email objects corresponding to the deleted emails from the HashMap
 
-        handler.post(new Runnable() {       // Since emails have been deleted we completely refresh the fragment view
+            handler.post(new Runnable() {       // Since emails have been deleted we completely refresh the fragment view
             @Override
             public void run() { refreshFragmentView(); }
         });
+        }
     }
 
 
