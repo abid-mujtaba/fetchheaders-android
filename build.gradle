@@ -9,7 +9,7 @@ buildscript         // This is the block required to setup gradle itself to carr
 
             dependencies
                     {
-                        classpath 'com.android.tools.build:gradle:0.5.+'
+                        classpath 'com.android.tools.build:gradle:0.6.+'
                     }
         }
 
