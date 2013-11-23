@@ -46,8 +46,10 @@ repositories                    // Here we declare the repositories to use for g
 
 dependencies                    // Dependencies of the project being built (using this build.gradle file mainly "fetchheaders-android"
         {
-            compile group: 'com.google.android', name: 'support-v4', version: 'r7'          // The first two dependencies are downloaded straight from Maven Central and don't need to be downloaded ourselves. They are kept in the build/ subfolder that gradle builds
-            compile group: 'com.sun.mail', name: 'javax.mail', version: '1.5.1'             // To get this information enter the package name in: http://gradleplease.appspot.com/
+            compile 'com.android.support:support-v4:18.0.+'         // This library is fetched based on the information contained in the Android Support Repo which we downloaded using the SDK Manager
+
+            compile group: 'com.sun.mail', name: 'javax.mail', version: '1.5.1'         // This dependency is downloaded straight from Maven Central and doesn't need to be downloaded ourselves. It is kept in the build/ subfolder that gradle builds
+                                                                                        // To get this information enter the package name in: http://gradleplease.appspot.com/
 
             compile project(':AndroidSVG')          // This is an Android Library project defined in /AndroidSVG subfolder
                                                     // The : before the name indicates that it is found in the ./AndroidSVG folder relative to the settings.gradle.
