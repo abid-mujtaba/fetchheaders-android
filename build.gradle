@@ -17,8 +17,14 @@ apply plugin: 'android'         // We declare the project this build.gradle file
 
 android                         // Configuration for the android project
     {
-        compileSdkVersion 10                // This may be left out and will be picked up from AndroidManifest.xml
+        compileSdkVersion 19                // This may be left out and will be picked up from AndroidManifest.xml
         buildToolsVersion "19.0.0"          // This is the version of the build tools found in ~/applications/android-sdk/build-tools/ folder
+
+        defaultConfig
+                {
+                    minSdkVersion 10
+                    targetSdkVersion 10
+                }
 
         sourceSets                          // Here we define where we can find the various files necessary to construct a functioning Android project
                 {
@@ -47,6 +53,7 @@ repositories                    // Here we declare the repositories to use for g
 dependencies                    // Dependencies of the project being built (using this build.gradle file mainly "fetchheaders-android"
         {
             compile 'com.android.support:support-v4:18.0.+'         // This library is fetched based on the information contained in the Android Support Repo which we downloaded using the SDK Manager
+            compile 'com.android.support:appcompat-v7:18.0.+'
 
             compile group: 'com.sun.mail', name: 'javax.mail', version: '1.5.1'         // This dependency is downloaded straight from Maven Central and doesn't need to be downloaded ourselves. It is kept in the build/ subfolder that gradle builds
                                                                                         // To get this information enter the package name in: http://gradleplease.appspot.com/
