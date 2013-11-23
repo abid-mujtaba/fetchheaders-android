@@ -2,22 +2,27 @@
 
 <!-- Source: http://www.androidhive.info/2011/09/how-to-create-android-menus/ (with icons) -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:menu="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_refresh"
-        android:title="@string/refresh"/>
+        android:title="@string/refresh"
+        menu:showAsAction="collapseActionView"/>
 
     <item
         android:id="@+id/menu_delete"
-        android:title="@string/delete_emails"/>
+        android:title="@string/delete_emails"
+        menu:showAsAction="collapseActionView"/>
 
     <item
         android:id="@+id/menu_accounts"
-        android:title="@string/accounts"/>
+        android:title="@string/accounts"
+        menu:showAsAction="collapseActionView"/>
 
     <item
         android:id="@+id/menu_show_seen"
-        android:title="@string/show_seen"/>
+        android:title="@string/show_seen"
+        menu:showAsAction="collapseActionView"/>
 
 </menu>

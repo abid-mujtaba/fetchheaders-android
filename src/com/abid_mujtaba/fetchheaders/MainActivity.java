@@ -3,9 +3,9 @@ package com.abid_mujtaba.fetchheaders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +20,7 @@ import com.abid_mujtaba.fetchheaders.models.Account;
 
 import java.util.ArrayList;
 
-public class MainActivity extends FragmentActivity implements ToggleMenu
+public class MainActivity extends ActionBarActivity implements ToggleMenu
 {
     private LinearLayout scrollList;
     private Menu mMenu;                 // A handle to the Menu item
@@ -92,13 +92,15 @@ public class MainActivity extends FragmentActivity implements ToggleMenu
     }
 
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        if (fDisableMenu) { Toast.makeText(this, "Waiting ...", Toast.LENGTH_SHORT).show(); }       // The menu is disabled and we apprise the user of this.
-
-        return ! fDisableMenu;              // Basically decide whether pressing the menu actually shows any items based on the fDisableMenu flag.
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu)
+//    {
+//        super.onPrepareOptionsMenu(menu);           // We make sure to carry out the actions we are overriding to carry out the requisite functionality
+//
+//        if (fDisableMenu) { Toast.makeText(this, "Waiting ...", Toast.LENGTH_SHORT).show(); }       // The menu is disabled and we apprise the user of this.
+//
+//        return ! fDisableMenu;              // Basically decide whether pressing the menu actually shows any items based on the fDisableMenu flag.
+//    }
 
 
     private int toggleMenuCount = 0;        // This integer is used to count the number of fragments who have asked to disable the menu. When this count is zero the menu is enabled.
