@@ -28,8 +28,8 @@
 
         <activity
             android:name=".AccountsActivity"
-            android:label="AccountsActivity"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:label="Accounts"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="com.abid_mujtaba.fetchheaders.AccountsActivity"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -38,8 +38,8 @@
 
         <activity
             android:name=".AccountSettingActivity"
-            android:label="AccountSettingActivity"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:label="Account Settings"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="com.abid_mujtaba.fetchheaders.AccountSettingActivity"/>
                 <category android:name="android.intent.category.DEFAULT"/>

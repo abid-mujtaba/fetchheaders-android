@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.abid_mujtaba.fetchheaders.fragments.AccountFragment;
 import com.abid_mujtaba.fetchheaders.interfaces.ToggleMenu;
@@ -39,6 +38,10 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(false);         // We turn off the application icon and ActionBar title in the Main page since we have a large heading already
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         setContentView(R.layout.main);
 
         if (savedInstanceState != null)     // If the passed in state information bundle is non-empty we expect it to contain the saved value of fShowSeen. We also pass in a default value.

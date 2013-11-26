@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:menu="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_add_account"
-        android:title="@string/add_account"/>
+        android:title="@string/add_account"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:icon="@drawable/plus"
+        menu:showAsAction="always"/>
 
 </menu>

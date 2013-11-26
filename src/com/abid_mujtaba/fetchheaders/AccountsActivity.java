@@ -1,15 +1,21 @@
 package com.abid_mujtaba.fetchheaders;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.*;
+import android.support.v7.app.ActionBarActivity;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.abid_mujtaba.fetchheaders.models.Account;
 
 /**
@@ -17,7 +23,7 @@ import com.abid_mujtaba.fetchheaders.models.Account;
 */
 
 
-public class AccountsActivity extends Activity {
+public class AccountsActivity extends ActionBarActivity {
 
     private View mLastViewTouched;
 

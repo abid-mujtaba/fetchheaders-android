@@ -47,6 +47,8 @@ public class AccountSettingActivity extends Activity
             edtHost.setText(mAccount.host());
             edtUsername.setText(mAccount.username());
             edtPassword.setText(mAccount.password());
+
+            setTitle( String.format("%s - Settings", mAccount.name()) );        // Change ActionBar title to include Account name
         }
     }
 
