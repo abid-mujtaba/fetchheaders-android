@@ -143,7 +143,6 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu
             case R.id.menu_accounts:
 
                 startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountsActivity"));
-                finish();
 
                 return true;
 

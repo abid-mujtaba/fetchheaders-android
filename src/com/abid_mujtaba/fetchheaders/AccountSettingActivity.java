@@ -1,8 +1,9 @@
 package com.abid_mujtaba.fetchheaders;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +14,7 @@ import com.abid_mujtaba.fetchheaders.models.Account;
  * Activity for adding or editing the settings of a specified account
  */
 
-public class AccountSettingActivity extends Activity
+public class AccountSettingActivity extends ActionBarActivity
 {
     private Account mAccount;
 
@@ -24,6 +25,10 @@ public class AccountSettingActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_setting);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         Bundle bdl = getIntent().getExtras();
 
