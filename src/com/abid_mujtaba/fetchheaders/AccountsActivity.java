@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -69,7 +70,6 @@ public class AccountsActivity extends ActionBarActivity {
             i.putExtras(bdl);
 
             startActivity(i);
-            finish();
         }
     };
 
@@ -80,24 +80,21 @@ public class AccountsActivity extends ActionBarActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.accounts_menu, menu);
 
-        return true;
-    }
+        MenuItem item = menu.findItem(R.id.menu_add_account);       // We gain access to the menu item and through it to its action view (the actionLayout definied in the menu layout)
+        View itemView = MenuItemCompat.getActionView(item);
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
+        if (itemView != null)
         {
-            case R.id.menu_add_account:
-
-                startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountSettingActivity"));
-                finish();
-
-                return true;
-
-            default:    return super.onOptionsItemSelected(item);
+            itemView.setOnClickListener(new View.OnClickListener() {        // To make the menu item work when it has an actionView we must explicitly attach a clicklistener to the actionview otherwise nothing happens when the menu is pressed
+                @Override                                                   // Note: With this implementation we do NOT need an onOptionItemSelected method
+                public void onClick(View view)
+                {
+                    startActivity(new Intent("com.abid_mujtaba.fetchheaders.AccountSettingActivity"));
+                }
+            });
         }
+
+        return true;
     }
 
 
