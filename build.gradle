@@ -63,3 +63,12 @@ dependencies                    // Dependencies of the project being built (usin
                                                     // Library projects MUST be included in settings.gradle. They MUST implement their own build.gradle file where they use the
                                                     // 'android-library' plugin rather than the 'android' plugin
         }
+
+
+/*
+ * NOTES:
+ *
+ * Is known to work on gradle-1.8 and NOT to work on gradle-1.10
+ *
+ * For the gradle build to work one needs to define the sdk.dir=<absolute android sdk path without quotes> in the local.properties files.
+ */
