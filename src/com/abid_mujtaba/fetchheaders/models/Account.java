@@ -53,6 +53,8 @@ public class Account
     private boolean mUsesLabels = false;        // This flag indicates that the email account uses Labels rather than Folders (Gmail being the most common example)
     private int mMaxNumOfEmails = 10;           // Max number of emails fetched for any account
 
+    SparseArray<Email> mEmails;
+
 
     private Account()        // Default empty constructor used to track objects
     {
@@ -93,6 +95,9 @@ public class Account
     {
         return String.format("<Account - name: %s - host: %s - username: %s - password: %s>", mName, mHost, mUsername, mPassword);
     }
+
+
+    public SparseArray<Email> emails() { return mEmails; }          // Method to access the emails associated with an account.
 
 
     public void update(String _name, String _host, String _username, String _password)      // Used to update account information
@@ -255,16 +260,16 @@ public class Account
 
             Arrays.sort(mMessages, new MessageComparator());        // The sort is accomplished using an instance of a custom comparator that compares messages using DateSent
 
-            SparseArray<Email> emails = new SparseArray<Email>();
+            mEmails = new SparseArray<Email>();
 
             for(int ii = 0; ii < mMessages.length; ii++)
             {
                 Email email = new Email( mMessages[ii] );
 
-                emails.put(ii, email);
+                mEmails.put(ii, email);
             }
 
-            return emails;
+            return mEmails;
         }
         catch (MessagingException e) { Resources.Loge("Exception while attempting to connect to mail server", e); throw e; }         // The two above exceptions are caught by this one if they are not explicitly stated above.
     }

@@ -5,27 +5,20 @@ package com.abid_mujtaba.fetchheaders.views;
  */
 
 import android.content.Context;
-import android.speech.tts.TextToSpeech;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.abid_mujtaba.fetchheaders.R;
-import com.abid_mujtaba.fetchheaders.Resources;
 
 import com.caverock.androidsvg.SVGImageView;
 
-import java.lang.Override;
-import java.util.Locale;
 
-
-public class EmailView extends LinearLayout implements TextToSpeech.OnInitListener
+public class EmailView extends LinearLayout
 {
     private TextView tvDate, tvFrom, tvSubject;
     private SVGImageView uIcon;
-
-    private TextToSpeech tts;
 
     private boolean fSeen = false;
 
@@ -44,8 +37,6 @@ public class EmailView extends LinearLayout implements TextToSpeech.OnInitListen
         tvFrom = (TextView) findViewById(R.id.tvFrom);
         tvSubject = (TextView) findViewById(R.id.tvSubject);
         uIcon = (SVGImageView) findViewById(R.id.email_icon);
-
-        tts = new TextToSpeech(context, this);
     }
 
     public EmailView(Context context, AttributeSet attrs, boolean flag_seen)         // constructor for email view for seen and unseen emails
@@ -84,11 +75,6 @@ public class EmailView extends LinearLayout implements TextToSpeech.OnInitListen
 //        tvDate.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 //        tvFrom.setPaintFlags(tvSubject.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-        Resources.Logd("strikethrough");
-
-        // Note: Adding periods '.' in the string introduces delays in the text to speech.
-        tts.speak(String.format("From %s. %s", tvFrom.getText().toString(), tvSubject.getText().toString()), TextToSpeech.QUEUE_FLUSH, null);
-
         uIcon.setImageAsset(SVG_ICON_TRASH);
     }
 
@@ -100,24 +86,5 @@ public class EmailView extends LinearLayout implements TextToSpeech.OnInitListen
 
         if (fSeen) { uIcon.setImageAsset(SVG_ICON_SEEN); }
         else { uIcon.setImageAsset(SVG_ICON_UNSEEN); }
-    }
-
-
-    @Override
-    public void onInit(int status)
-    {
-        if (status == TextToSpeech.SUCCESS)
-        {
-            int result = tts.setLanguage(Locale.US);
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
-            {
-                Resources.Loge("This Language is not supported.", null);
-            }
-        }
-        else
-        {
-            Resources.Loge("Initialization failed", null);
-        }
     }
 }

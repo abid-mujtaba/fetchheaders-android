@@ -3,9 +3,11 @@ package com.abid_mujtaba.fetchheaders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,10 +18,12 @@ import com.abid_mujtaba.fetchheaders.fragments.AccountFragment;
 import com.abid_mujtaba.fetchheaders.interfaces.ToggleMenu;
 import com.abid_mujtaba.fetchheaders.misc.ThreadPool;
 import com.abid_mujtaba.fetchheaders.models.Account;
+import com.abid_mujtaba.fetchheaders.models.Email;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class MainActivity extends ActionBarActivity implements ToggleMenu
+public class MainActivity extends ActionBarActivity implements ToggleMenu, TextToSpeech.OnInitListener
 {
     private LinearLayout scrollList;
     private Menu mMenu;                 // A handle to the Menu item
@@ -32,6 +36,8 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu
     private boolean fDisableMenu = false;               // A flag that indicates whether the menu should be disabled or not. We want the menu disabled when we are performing certain tasks such as fetching emails
 
     private String BUNDLE_FLAG_SHOW_SEEN = "BUNDLE_FLAG_SHOW_SEEN";     // Used as a key for the showSeen flag stored in the Bundle that saves state information when the activity is restarted (possibly because of screen rotation)
+
+    private TextToSpeech mTTS;
 
 
     @Override
@@ -47,6 +53,11 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu
         }
 
         scrollList = (LinearLayout) findViewById(R.id.scrollList);
+
+        if (mTTS == null)       // If onCreate is called multiple times we do NOT want to create multiple TextToSpeech objects
+        {
+            mTTS = new TextToSpeech(this, this);
+        }
 
         if (Account.numberOfAccounts() > 0)             // Accounts have been specified
         {
@@ -76,6 +87,18 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu
         }
     }
 
+
+    @Override
+    protected void onDestroy()
+    {
+        if (mTTS != null)           // mTTS needs to be properly shutdown otherwise the app will complain about a leaked service
+        {
+            mTTS.stop();
+            mTTS.shutdown();
+        }
+
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -157,6 +180,10 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu
 
                 return true;
 
+            case R.id.menu_speak:
+
+                speak_emails();
+
             default:
 
                 return super.onOptionsItemSelected(item);
@@ -194,6 +221,77 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu
             };
 
             ThreadPool.executeTask(delete);
+        }
+    }
+
+
+    private void speak_emails()
+    {
+        for (int ii = 0; ii < Account.numberOfAccounts(); ii++)
+        {
+            Account account = Account.get(ii);
+            SparseArray<Email> emails = account.emails();
+
+            int num_emails = emails.size();
+
+            if (num_emails > 0)
+            {
+                speak(account);         // Speak Account name
+
+                for (int jj = 0; jj < num_emails; jj++)
+                {
+                    Email email = emails.get(jj);
+
+                    if (! email.seen())
+                    {
+                        speak(email);
+                    }
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void onInit(int status)
+    {
+        if (status == TextToSpeech.SUCCESS)
+        {
+            int result = mTTS.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
+            {
+                Resources.Loge("This Language is not supported.", null);
+            }
+        }
+        else
+        {
+            mTTS = null;
+
+            Resources.Loge("Initialization failed", null);
+        }
+    }
+
+
+    private void speak(Email email)         // Method for applying TextToSpeech to an email
+    {
+        if (mTTS != null)           // mTTS is set to null if the initialization fails
+        {
+            // NOTE: Adding periods inside the string introduces delays in the Speech synthesized from the text
+            String msg = String.format("From %s. %s.", email.from(), email.subject());
+
+            mTTS.speak(msg, TextToSpeech.QUEUE_ADD, null);
+        }
+    }
+
+
+    private void speak(Account account)         // Method for applying TextToSpeech to an account
+    {
+        if (mTTS != null)
+        {
+            String msg = String.format(".Account %s.", account.name());
+
+            mTTS.speak(msg, TextToSpeech.QUEUE_ADD, null);
         }
     }
 }

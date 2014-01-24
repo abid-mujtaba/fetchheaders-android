@@ -25,4 +25,9 @@
         android:title="@string/show_seen"
         menu:showAsAction="collapseActionView"/>
 
+    <item
+        android:id="@+id/menu_speak"
+        android:title="Speak"
+        menu:showAsAction="collapseActionView"/>
+
 </menu>
