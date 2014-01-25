@@ -93,12 +93,24 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu, TextT
     {
         if (mTTS != null)           // mTTS needs to be properly shutdown otherwise the app will complain about a leaked service
         {
-            mTTS.stop();
             mTTS.shutdown();
         }
 
         super.onDestroy();
     }
+
+
+    @Override
+    protected void onStop()
+    {
+        if (mTTS != null)
+        {
+            mTTS.stop();        // We stop the TTS engine when the activity stops. This stops ALL current and queued TTS activity.
+        }
+
+        super.onStop();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
