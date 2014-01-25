@@ -234,7 +234,7 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu, TextT
 
             int num_emails = emails.size();
 
-            if (num_emails > 0)
+            if (account.num_unseen_emails() > 0)
             {
                 speak(account);         // Speak Account name
 
@@ -261,15 +261,17 @@ public class MainActivity extends ActionBarActivity implements ToggleMenu, TextT
 
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
             {
-                Resources.Loge("This Language is not supported.", null);
+                Resources.Loge("This Language is not supported. result: " + result, null);
+                Resources.Loge("If result is -1 simply install 'Speech Synthesis Data Installer' from the Google Play Store.", null);
             }
+            else { return; }
         }
-        else
-        {
-            mTTS = null;
 
-            Resources.Loge("Initialization failed", null);
-        }
+        mTTS.stop();
+        mTTS.shutdown();
+        mTTS = null;
+
+        Resources.Loge("Initialization failed", null);
     }
 
 

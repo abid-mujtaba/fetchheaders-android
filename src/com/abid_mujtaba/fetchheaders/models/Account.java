@@ -338,4 +338,20 @@ public class Account
         }
         catch (MessagingException e) {}
     }
+
+
+    public int num_unseen_emails()       // Method for returning the number of unseen emails pulled for this account
+    {
+        int num = 0;
+
+        for (int ii = 0; ii < mEmails.size(); ii++)
+        {
+            if (! mEmails.get(ii).seen())
+            {
+                num++;
+            }
+        }
+
+        return num;
+    }
 }
