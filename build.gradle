@@ -65,6 +65,11 @@ dependencies                    // Dependencies of the project being built (usin
         }
 
 
+task wrapper(type: Wrapper) {               // Defines a "Wrapper" task which generates the files required for Gradle Wrapper
+    gradleVersion = '1.8'
+}
+
+
 /*
  * NOTES:
  *
