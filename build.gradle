@@ -1,4 +1,5 @@
 // Source: http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Introduction
+// Source (Gradle Wrapper): http://www.gradle.org/docs/current/userguide/gradle_wrapper.html
 
 buildscript         // This is the block required to setup gradle itself to carry out the building. It uses maven to download necessary files for gradle to perform its tasks.
         {
