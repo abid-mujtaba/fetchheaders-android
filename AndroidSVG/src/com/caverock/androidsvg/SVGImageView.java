@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+// NOTICE: This file has been modified by Abid H. Mujtaba. Its contents differ from the original.
+
 package com.caverock.androidsvg;
 
 import java.io.FileNotFoundException;

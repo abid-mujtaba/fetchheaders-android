@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- NOTICE: This file has been modified by Abid Hasan Mujtaba. It differs from the original -->
+
 <resources>
 
     <declare-styleable name="SVGImageView">
